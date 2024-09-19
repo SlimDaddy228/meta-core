@@ -1,1 +1,8 @@
 .idea
+node_modules
+
+apps/cfx/tsconfig.tsbuildinfo
+apps/cfx/dist
+
+packages/utils/tsconfig.tsbuildinfo
+packages/utils/dist

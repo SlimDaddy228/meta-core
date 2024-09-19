@@ -1,0 +1,63 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "project": "./apps/cfx/tsconfig.json",
+    "ecmaFeatures": {
+      "modules": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx"
+      ]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./apps/cfx/tsconfig.json"
+      },
+      "node": {
+        "moduleDirectory": [
+          "apps"
+        ],
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      }
+    }
+  }
+  //  "rules": {
+  //    "import/no-restricted-paths": [
+  //      "error",
+  //      {
+  //        "zones": [
+  //          {
+  //            "target": "./apps/cfx/server/modules",
+  //            "from": "./apps/cfx/client/modules",
+  //            "message": "che kavo"
+  //          }
+  //        ]
+  //      }
+  //    ]
+  //  }
+}

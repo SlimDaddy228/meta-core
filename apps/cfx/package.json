@@ -2,16 +2,7 @@
   "name": "cfx",
   "version": "1.0.0",
   "description": "",
-  "scripts": {
-    "build": "tsc --build",
-    "watch": "tsc --build --watch"
-  },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@citizenfx/client": "latest",
-    "@citizenfx/server": "latest",
-    "@types/node": "^22.5.5"
-  }
+  "license": "ISC"
 }

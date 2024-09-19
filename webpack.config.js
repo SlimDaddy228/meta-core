@@ -1,22 +1,28 @@
 const webpack = require("webpack");
 const path = require("path");
 const RemovePlugin = require("remove-files-webpack-plugin");
+const ESLintPlugin = require("eslint-webpack-plugin");
+const buildPath = path.resolve(__dirname, "./apps/cfx/dist");
 
-const buildPath = path.resolve(__dirname, "dist");
+const alias = {
+    "@server": path.resolve(__dirname, "./apps/cfx/server/"),
+    "@client": path.resolve(__dirname, "./apps/cfx/client/"),
+}
 
 const server = {
-    entry: "./server/index.ts",
+    entry: "./apps/cfx/server/index.ts",
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: ["ts-loader", "eslint-loader"],
-                exclude: [/node_modules/, path.resolve(buildPath, "web")],
+                use: ["ts-loader"],
+                exclude: [/node_modules/],
             },
         ],
     },
     plugins: [
         new webpack.DefinePlugin({"global.GENTLY": false}),
+        new ESLintPlugin({}),
         new RemovePlugin({
             before: {
                 include: [
@@ -35,6 +41,7 @@ const server = {
     },
     resolve: {
         extensions: [".ts"],
+        alias
     },
     output: {
         filename: "[contenthash].server.js",
@@ -44,17 +51,18 @@ const server = {
 };
 
 const client = {
-    entry: "./client/index.ts",
+    entry: "./apps/cfx/client/index.ts",
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: ["ts-loader", "eslint-loader"],
-                exclude: [/node_modules/, path.resolve(buildPath, "web")],
+                use: ["ts-loader"],
+                exclude: [/node_modules/],
             },
         ],
     },
     plugins: [
+        new ESLintPlugin({}),
         new RemovePlugin({
             before: {
                 include: [
@@ -73,6 +81,7 @@ const client = {
     },
     resolve: {
         extensions: [".ts"],
+        alias
     },
     output: {
         filename: "[contenthash].client.js",

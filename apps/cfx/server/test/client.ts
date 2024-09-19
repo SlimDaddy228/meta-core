@@ -1,1 +1,1 @@
-export const clientTest1 = "1222223"
+export const serverTest1 = "1222223"

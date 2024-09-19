@@ -1,0 +1,1 @@
+export const clientTest1 = "1222223"

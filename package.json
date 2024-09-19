@@ -2,17 +2,26 @@
   "name": "meta-core",
   "version": "1.0.0",
   "description": "",
-  "scripts": {
-    "build": "tsc --build",
-    "dev": "tsc --build --watch"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch"
+  },
   "devDependencies": {
-    "typescript": "^5.6.2",
+    "@citizenfx/client": "latest",
+    "@citizenfx/server": "latest",
+    "@types/node": "^22.5.5",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "eslint": "^8.57.1",
+    "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-import": "^2.27.5",
-    "eslint": "^8.57.1"
+    "eslint-webpack-plugin": "^4.2.0",
+    "remove-files-webpack-plugin": "^1.5.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.6.2",
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.1.4"
   }
 }

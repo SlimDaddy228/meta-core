@@ -1,7 +1,6 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "outDir": "./",
     "noImplicitAny": false,
     "module": "commonjs",
@@ -16,24 +15,12 @@
     ],
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "paths": {
-      "@/*": [
-        "*"
-      ],
-      "@client/*": [
-        "./client/*"
-      ],
-      "@server/*": [
-        "./server/*"
-      ]
-    }
+    "esModuleInterop": true
   },
   "include": [
-    "client",
-    "server"
+    "./**/*"
   ],
   "exclude": [
-    "node_modules"
+    "**/node_modules"
   ]
 }

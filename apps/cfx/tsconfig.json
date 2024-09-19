@@ -7,12 +7,13 @@
     "module": "commonjs",
     "target": "es6",
     "allowJs": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "lib": [
       "es2017"
     ],
     "types": [
-      "@citizenfx/client",
-      "@citizenfx/server",
+      "reflect-metadata",
       "@types/node"
     ],
     "moduleResolution": "node",
@@ -27,12 +28,16 @@
       ],
       "@server/*": [
         "./server/*"
+      ],
+      "@shared/*": [
+        "./shared/*"
       ]
     }
   },
   "include": [
     "client",
-    "server"
+    "server",
+    "shared"
   ],
   "exclude": [
     "node_modules"

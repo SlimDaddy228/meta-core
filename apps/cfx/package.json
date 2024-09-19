@@ -21,5 +21,9 @@
   "ts-loader": "workspace:*",
   "typescript": "workspace:*",
   "webpack": "workspace:*",
-  "webpack-cli": "workspace:*"
+  "webpack-cli": "workspace:*",
+  "dependencies": {
+    "inversify": "^6.0.2",
+    "reflect-metadata": "^0.2.2"
+  }
 }

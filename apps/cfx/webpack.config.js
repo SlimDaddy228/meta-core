@@ -5,8 +5,10 @@ const ESLintPlugin = require("eslint-webpack-plugin");
 const buildPath = path.resolve(__dirname, "./dist");
 
 const alias = {
+    "@": path.resolve(__dirname, "./"),
     "@server": path.resolve(__dirname, "./server/"),
     "@client": path.resolve(__dirname, "./client/"),
+    "@shared": path.resolve(__dirname, "./shared/"),
 }
 
 const server = {

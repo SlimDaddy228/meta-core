@@ -1,1 +1,0 @@
-export const serverTest1 = "1222223"

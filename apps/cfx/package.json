@@ -4,5 +4,22 @@
   "description": "",
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch"
+  },
+  "@citizenfx/client": "workspace:*",
+  "@citizenfx/server": "workspace:*",
+  "@types/node": "workspace:*",
+  "@typescript-eslint/eslint-plugin": "workspace:*",
+  "eslint": "workspace:*",
+  "eslint-import-resolver-typescript": "workspace:*",
+  "eslint-plugin-import": "workspace:*",
+  "eslint-webpack-plugin": "workspace:*",
+  "remove-files-webpack-plugin": "workspace:*",
+  "ts-loader": "workspace:*",
+  "typescript": "workspace:*",
+  "webpack": "workspace:*",
+  "webpack-cli": "workspace:*"
 }

@@ -2,15 +2,15 @@ const webpack = require("webpack");
 const path = require("path");
 const RemovePlugin = require("remove-files-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
-const buildPath = path.resolve(__dirname, "./apps/cfx/dist");
+const buildPath = path.resolve(__dirname, "./dist");
 
 const alias = {
-    "@server": path.resolve(__dirname, "./apps/cfx/server/"),
-    "@client": path.resolve(__dirname, "./apps/cfx/client/"),
+    "@server": path.resolve(__dirname, "./server/"),
+    "@client": path.resolve(__dirname, "./client/"),
 }
 
 const server = {
-    entry: "./apps/cfx/server/index.ts",
+    entry: "./server/index.ts",
     module: {
         rules: [
             {
@@ -51,7 +51,7 @@ const server = {
 };
 
 const client = {
-    entry: "./apps/cfx/client/index.ts",
+    entry: "./client/index.ts",
     module: {
         rules: [
             {

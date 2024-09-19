@@ -5,10 +5,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "scripts": {
-    "build": "webpack --mode production",
-    "watch": "webpack --mode development --watch"
-  },
   "devDependencies": {
     "@citizenfx/client": "latest",
     "@citizenfx/server": "latest",

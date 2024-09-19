@@ -1,2 +1,2 @@
-export const test = 'client test'
-console.log(test)
+export const clientTest = 'client test'
+console.log(clientTest)

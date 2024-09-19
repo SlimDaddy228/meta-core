@@ -9,8 +9,8 @@ server_scripts {
     "apps/cfx/dist/server/**/*.js"
 }
 
-ui_page 'apps/cfx/web/dist/index.html'
+ui_page 'apps/web/dist/index.html'
 
 files {
-    'apps/cfx/web/dist/**/*',
+    'apps/web/dist/**/*',
 }

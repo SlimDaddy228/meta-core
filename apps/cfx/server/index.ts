@@ -1,2 +1,1 @@
-const serverTest = "server test"
-console.log(serverTest, GetPlayerPed(""))
+console.log("server init")

@@ -1,1 +1,1 @@
-console.log(123, GetPlayerPed, "xanax5");
+console.log("client init2")

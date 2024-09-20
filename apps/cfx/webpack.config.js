@@ -2,7 +2,6 @@ const webpack = require("webpack");
 const path = require("path");
 const RemovePlugin = require("remove-files-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
-const nodeExternals = require('webpack-node-externals');
 const buildPath = path.resolve(__dirname, "./dist");
 
 const alias = {
@@ -24,12 +23,6 @@ const server = {
             },
         ],
     },
-    externals: [
-        nodeExternals(),
-        nodeExternals({
-            modulesDir: path.resolve(__dirname, '.'),
-        }),
-    ],
     plugins: [
         new webpack.DefinePlugin({"global.GENTLY": false}),
         new ESLintPlugin({}),
@@ -47,10 +40,10 @@ const server = {
         })
     ],
     optimization: {
-        minimize: true,
+        minimize: false,
     },
     resolve: {
-        extensions: [".ts"],
+        extensions: [".js", ".ts"],
         alias
     },
     output: {
@@ -71,12 +64,6 @@ const client = {
             },
         ],
     },
-    externals: [
-        nodeExternals(),
-        nodeExternals({
-            modulesDir: path.resolve(__dirname, '.'),
-        }),
-    ],
     plugins: [
         new ESLintPlugin({}),
         new RemovePlugin({
@@ -93,10 +80,10 @@ const client = {
         })
     ],
     optimization: {
-        minimize: true,
+        minimize: false,
     },
     resolve: {
-        extensions: [".ts"],
+        extensions: [".js", ".ts"],
         alias
     },
     output: {

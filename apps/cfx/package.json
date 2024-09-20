@@ -12,6 +12,8 @@
   "@citizenfx/client": "workspace:*",
   "@citizenfx/server": "workspace:*",
   "@types/node": "workspace:*",
+  "eslint-plugin-unicorn": "workspace:*",
+  "eslint-plugin-prettier": "workspace:*",
   "@typescript-eslint/eslint-plugin": "workspace:*",
   "eslint": "workspace:*",
   "eslint-import-resolver-typescript": "workspace:*",
@@ -22,6 +24,7 @@
   "typescript": "workspace:*",
   "webpack": "workspace:*",
   "webpack-cli": "workspace:*",
+  "webpack-node-externals": "^3.0.0",
   "dependencies": {
     "inversify": "^6.0.2",
     "reflect-metadata": "^0.2.2"

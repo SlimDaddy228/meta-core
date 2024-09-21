@@ -1,5 +1,6 @@
 import IdGenerator from "@shared/utils/id-generator";
 import {IS_SERVER} from "@shared/utils/cfx";
+import {isNumber} from "@shared/utils/guards/types";
 
 export type CallHandler = (target: number | string, ...args: any[]) => Promise<unknown> | void;
 
@@ -33,18 +34,21 @@ export function getInterface(name: string, identifier: string = GetCurrentResour
 
     function generateHandler(memberName: string): CallHandler {
         return (...args) => {
-            const {0: source} = args
+            const [source] = args
 
-            if (IS_SERVER && typeof source !== "number") {
+            if (IS_SERVER && !isNumber(source)) {
                 throw new Error("Remote method must be a player source value")
             }
 
+            const requestTunnelEventName = `${name}:tunnel_req`
+            const argumentsWithoutPlayerSource = args.splice(1, args.length)
+            const isAvoidMethod = memberName.startsWith("_")
 
-            if (memberName.startsWith("_")) {
+            if (isAvoidMethod) {
                 if (IS_SERVER) {
-                    emitNet(`${name}:tunnel_req`, source, memberName, args.splice(1, args.length), identifier, -1);
+                    emitNet(requestTunnelEventName, source, memberName, argumentsWithoutPlayerSource, identifier, -1);
                 } else {
-                    emitNet(`${name}:tunnel_req`, memberName, args, identifier, -1);
+                    emitNet(requestTunnelEventName, memberName, args, identifier, -1);
                 }
             }
 
@@ -54,9 +58,9 @@ export function getInterface(name: string, identifier: string = GetCurrentResour
                 callbacks[id] = resolve;
 
                 if (IS_SERVER) {
-                    emitNet(`${name}:tunnel_req`, source, memberName, args.splice(1, args.length), identifier, id);
+                    emitNet(requestTunnelEventName, source, memberName, argumentsWithoutPlayerSource, identifier, id);
                 } else {
-                    emitNet(`${name}:tunnel_req`, memberName, args, identifier, id);
+                    emitNet(requestTunnelEventName, memberName, args, identifier, id);
                 }
             });
         };

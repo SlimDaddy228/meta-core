@@ -42,11 +42,17 @@
           {
             "target": "./client",
             "from": "./server",
+            "except": [
+              "./modules/types"
+            ],
             "message": "You can't import to the client from the server"
           },
           {
             "target": "./server",
             "from": "./client",
+            "except": [
+              "./modules/types"
+            ],
             "message": "You can't import to the server from the client"
           }
         ]

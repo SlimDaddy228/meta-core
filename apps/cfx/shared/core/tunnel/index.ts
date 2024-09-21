@@ -98,7 +98,11 @@ export function bindInterface(name: string, handlers: BindHandlers) {
         }
 
         if (id >= 0) {
-            emitNet(`${name}:${identifier}:tunnel_res`, source, id, [payload]);
+            if (IS_SERVER) {
+                emitNet(`${name}:${identifier}:tunnel_res`, source, id, [payload]);
+            } else {
+                emitNet(`${name}:${identifier}:tunnel_res`, id, [payload]);
+            }
         }
     });
 }

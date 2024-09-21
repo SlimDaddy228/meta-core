@@ -12,10 +12,10 @@ export class ModuleLoader {
 
     public load(module: any): void {
         const moduleMetadata = Reflect.getMetadata(ModuleMetadataKey, module) as ModuleMetadata;
-        console.log('[module] load:', moduleMetadata.name);
 
         for (const provider of moduleMetadata.providers) {
-            this.providerLoader.load(this.container.get(provider));
+            const instance = this.container.get(provider);
+            this.providerLoader.load(instance);
         }
     }
 }

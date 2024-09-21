@@ -1,6 +1,5 @@
-import {decorate, inject, injectable, multiInject} from 'inversify';
-
-import {Container} from '@shared/core/container';
+import {decorate, inject, injectable, multiInject} from "inversify";
+import {Container} from "@shared/core/container";
 
 export const Inject = inject;
 
@@ -10,7 +9,6 @@ export const Injectable =
     (...token: any[]): ClassDecorator =>
         target => {
             decorate(injectable(), target);
-
             if (token.length === 0) {
                 token.push(target);
             }

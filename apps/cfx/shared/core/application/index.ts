@@ -14,6 +14,7 @@ export class Application {
 
     public static create(providerTarget: any, ...modules: Module[]) {
         Container.bind(providerTarget).to(providerTarget).inSingletonScope();
+
         const app = Container.get(Application);
 
         for (const module of modules) {

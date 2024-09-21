@@ -4,6 +4,12 @@ import {ProviderClientLoader} from "@core/loaders/provider.client.loader";
 import {NuiModule} from "@client/modules/nui/nui.module";
 
 function startApplication() {
+    try {
+        setMaxEventListeners(20);
+    } catch {
+        /* empty */
+    }
+    
     const application = Application.create(
         ProviderClientLoader,
         NuiModule

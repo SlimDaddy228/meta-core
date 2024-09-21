@@ -1,35 +1,21 @@
 import {Injectable} from "@core/decorations/injectable";
 import {getMethodMetadata} from "@shared/utils/reflect/method";
 import {TunnelMetadataKey, TunnelMethodMetadata} from "@core/decorations/tunnel";
-import {generateEventId} from "@shared/utils/generate-event-id";
-import {IS_CLIENT, IS_SERVER} from "@shared/utils/cfx";
+import {ProviderMetadata, ProviderMetadataKey} from "@core/decorations/provider";
+import {BindHandlers, bindInterface} from "@core/tunnel";
 
 @Injectable()
 export class TunnelLoader {
     public load(provider: any): void {
+        const {name: className} = Reflect.getMetadata(ProviderMetadataKey, provider) as ProviderMetadata;
         const methods = getMethodMetadata<TunnelMethodMetadata>(TunnelMetadataKey, provider);
 
-        for (const method of Object.values(methods)) {
-            this.bindInterface(method.className, method.methodName)
+        const normalizeMethods: BindHandlers = {}
+
+        for (const methodName of Object.keys(methods)) {
+            normalizeMethods[methodName] = provider[methodName].bind(provider);
         }
-    }
 
-
-    private bindInterface(className: string, methodName: string) {
-        const requestEventName = generateEventId(className, methodName, ":tunnel_req")
-
-        console.log(requestEventName, "created")
-        onNet(requestEventName, async () => {
-            const responseEventName = generateEventId(className, methodName, ":tunnel_res")
-
-            if (IS_SERVER) {
-                const source = global.source;
-                emitNet(responseEventName, source);
-            }
-
-            if (IS_CLIENT) {
-                emitNet(responseEventName);
-            }
-        });
+        bindInterface(className, normalizeMethods)
     }
 }

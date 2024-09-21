@@ -50,6 +50,10 @@ const server = {
         filename: "[contenthash].server.js",
         path: path.resolve(buildPath, "server")
     },
+    node: {
+        __dirname: true,
+        __filename: true
+    },
     target: "node",
 };
 

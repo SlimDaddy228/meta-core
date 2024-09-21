@@ -7,7 +7,8 @@
   "license": "ISC",
   "scripts": {
     "build": "webpack --mode production",
-    "watch": "webpack --mode development --watch"
+    "watch": "webpack --mode development --watch",
+    "prisma:generate": "npx prisma generate && node prisma/scripts/patch-generate-runtime.js"
   },
   "@citizenfx/client": "workspace:*",
   "@citizenfx/server": "workspace:*",
@@ -24,8 +25,10 @@
   "typescript": "workspace:*",
   "webpack": "workspace:*",
   "webpack-cli": "workspace:*",
+  "prisma": "^5.19.1",
   "dependencies": {
     "inversify": "^6.0.2",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "@prisma/client": "^5.19.1"
   }
 }

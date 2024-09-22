@@ -4,20 +4,32 @@ import {OnEventName} from "@shared/types/events";
 import {translate} from "@server/i18"
 import {Inject} from "@core/decorations/injectable";
 import {Logger} from "@core/logger";
-import {PrismaProvider} from "@server/modules/database/prisma.provider";
+import {UserProvider} from "@server/modules/user/user.provider";
+import {User} from "@server/user";
+import {UserIdStateProvider} from "@server/modules/user/user.state.id";
+import {UserSourceStateProvider} from "@server/modules/user/user.state.source";
+import {UserPendingStateProvider} from "@server/modules/user/user.state.pending";
 
-type Identifiers = string[]
 
 @Provider()
 export class ConnectPlayerProvider {
     @Inject(Logger)
     private logger: Logger;
 
-    @Inject(PrismaProvider)
-    private prismaProvider: PrismaProvider;
+    @Inject(UserProvider)
+    private userProvider: UserProvider;
 
-    public getPlayerIdentifiers(source: string): Identifiers {
-        const identifiers: Identifiers = [];
+    @Inject(UserIdStateProvider)
+    private userIdStateProvider: UserIdStateProvider
+
+    @Inject(UserSourceStateProvider)
+    private userSourceStateProvider: UserSourceStateProvider
+
+    @Inject(UserPendingStateProvider)
+    private userPendingStateProvider: UserPendingStateProvider
+
+    public getPlayerIdentifiers(source: string): string[] {
+        const identifiers: string[] = [];
 
         for (let i = 0; i < GetNumPlayerIdentifiers(source); i++) {
             const identifier = GetPlayerIdentifier(source, i);
@@ -27,48 +39,26 @@ export class ConnectPlayerProvider {
         return identifiers
     }
 
-    private async createUser(identifiers: Identifiers) {
-        const createdUser = await this.prismaProvider.users.create({
-            data: {
-                banned: false,
-                whitelisted: false,
-                character_select: 1
-            }
-        })
+    private unloadPlayer(source: number) {
+        const identifiers = this.getPlayerIdentifiers(String(source))
+        const pendingId = identifiers.join(":")
+        let user = this.userSourceStateProvider.getUser(source)
 
-        for (const identifier of identifiers) {
-            await this.prismaProvider.userIds.create({
-                data: {
-                    identifier,
-                    user_id: createdUser.id
-                }
-            })
+        if (!user) {
+            user = this.userPendingStateProvider.getUser(pendingId)
         }
 
-        return createdUser
-    }
+        if (user) {
+            this.userIdStateProvider.removeUser(user.id)
+            this.userSourceStateProvider.removeUser(user.source)
+            this.userPendingStateProvider.removeUser(pendingId)
 
-    private async getUserIdByIdentifier(identifiers: Identifiers) {
-        for (const identifier of identifiers) {
-            if (!identifier.includes(":ip")) {
-                const result = await this.prismaProvider.userIds.findFirst({
-                    where: {
-                        identifier
-                    }
-                })
-                if (result) {
-                    return result.user_id
-                }
-            }
+            this.logger.debug(`${user.name} (${user.endpoint}): (user_id = ${user.id}) disconnect`)
         }
-
-        const createdUser = await this.createUser(identifiers);
-
-        return createdUser.id
     }
 
     @OnEvent({eventName: OnEventName.playerConnecting})
-    private async onPlayerConnect(name, _, deferrals) {
+    private async onPlayerConnect(name: string, _, deferrals) {
         try {
             deferrals.defer()
             const player = global.source
@@ -84,19 +74,54 @@ export class ConnectPlayerProvider {
             }
 
             deferrals.update(translate("connect:get_user_id_by_identifiers"))
-            const userId = await this.getUserIdByIdentifier(identifiers)
+            const userId = await this.userProvider.getIdByIdentifier(identifiers)
 
             if (!userId) {
                 const info = translate("connect:error_identifiers", {playerName: name});
                 this.logger.debug(info)
-                return deferrals.done()
+                return deferrals.done(info)
             }
 
             deferrals.update(translate("connect:checking_whitelist"))
+            const isWhitelisted = await this.userProvider.isWhitelisted(userId)
+
+            if (!isWhitelisted) {
+                const info = translate("connect:not_whitelisted", {userId});
+                this.logger.debug(info)
+                return deferrals.done(info)
+            }
 
             deferrals.update(translate("connect:checking_bans"))
+            const isBanned = await this.userProvider.isBanned(userId)
 
-            deferrals.done("qq")
+            if (isBanned) {
+                const info = translate("connect:is_banned", {userId});
+                this.logger.debug(info)
+                return deferrals.done(info)
+            }
+
+            if (this.userIdStateProvider.getUser(userId)) {
+                this.unloadPlayer(player)
+
+                const info = translate("connect:character_has_loaded", {userId});
+                this.logger.debug(info)
+
+                return deferrals.done(info)
+            }
+
+            const user = new User(player, userId)
+
+            user.name = name
+            user.endpoint = GetPlayerEndpoint(String(player))
+
+            this.userIdStateProvider.addUser(userId, user)
+            this.userSourceStateProvider.addUser(player, user)
+            this.userPendingStateProvider.addUser(identifiers.join(":"), user)
+
+            this.logger.debug(`${name} (${user.endpoint}): (user_id = ${userId}) join`)
+            emit(OnEventName.playerJoin)
+
+            deferrals.done(`connect success ${player}`)
         } catch (error) {
             const info = translate("connect:unknown_reject");
             this.logger.warn(info, error)

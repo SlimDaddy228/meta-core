@@ -2,5 +2,6 @@ export enum OnEventName {
     onResourceStart = "start",
     onResourceStop = "onResourceStop",
     playerConnecting = "playerConnecting",
-    playerDropped = "playerDropped"
+    playerDropped = "playerDropped",
+    playerJoin = "playerJoin",
 }

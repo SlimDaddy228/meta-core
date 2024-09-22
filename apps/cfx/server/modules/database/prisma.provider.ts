@@ -32,8 +32,10 @@ export class PrismaProvider extends PrismaClient<Prisma.PrismaClientOptions, "qu
     }
 
     @OnEvent({eventName: OnEventName.onResourceStop})
-    public onStop() {
-        this.$disconnect()
+    public onStop(resourceName: string) {
+        if (resourceName === GetCurrentResourceName()) {
+            this.$disconnect()
+        }
     }
 
     public override $disconnect(): JsPromise<void> {

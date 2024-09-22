@@ -17,10 +17,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id Int @id @default(autoincrement())
+model Users {
+  id               Int          @id @default(autoincrement())
+  whitelisted      Boolean?
+  banned           Boolean?
+  character_select Int?
+  last_login       String?      @db.VarChar(100)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  user_ids         UserIds[]
+  characters       Characters[]
+
+  @@map("users")
 }
 
-model Admins {
-  id Int @id @default(autoincrement())
+model UserIds {
+  identifier String   @id @db.VarChar(100)
+  user_id    Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("user_ids")
+}
+
+model Characters {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("characters")
 }

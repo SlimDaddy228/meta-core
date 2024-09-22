@@ -1,4 +1,10 @@
 {
   "loading": "Загрузка...",
+  "identifiers_not_found": "{{playerName}} отказ в подключении: Идентификаторы не найдены!",
+  "get_user_id_by_identifiers": "Пытаемся найти вашего пользователя...",
+  "error_identifiers": "{{playerName}} отказ в подключении: Ошибка получение идентификаторов!",
+  "checking_whitelist": "Проверяем есть ли у Вас whitelist...",
+  "checking_bans": "Смотрим, находитесь ли Вы в бане",
+  "success_find_character": "Мы успешно нашли вашего персонажа",
   "unknown_reject": "Неизвестная ошибка, повторите позже"
 }

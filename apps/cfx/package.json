@@ -27,8 +27,13 @@
   "webpack-cli": "workspace:*",
   "prisma": "^5.19.1",
   "dependencies": {
+    "@prisma/client": "^5.19.1",
+    "i18next": "^23.15.1",
+    "i18next-fs-backend": "^2.3.2",
     "inversify": "^6.0.2",
-    "reflect-metadata": "^0.2.2",
-    "@prisma/client": "^5.19.1"
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@types/i18next": "^13.0.0"
   }
 }

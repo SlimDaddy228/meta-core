@@ -58,7 +58,7 @@ export class PrismaProvider extends PrismaClient<Prisma.PrismaClientOptions, "qu
         try {
             this.logger.info(this.generateLogText("Start connection to database..."))
             await this.$connect()
-            this.logger.info(this.generateLogText("Connection to database is sucessfully..."))
+            this.logger.success(this.generateLogText("Connection to database is sucessfully"))
 
             const pid = await findProcessByFile(this.windowsEngineName);
 

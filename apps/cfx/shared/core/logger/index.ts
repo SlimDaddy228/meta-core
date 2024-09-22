@@ -15,6 +15,7 @@ export enum LogLevel {
     Info = "INFO",
     Warn = "WARN",
     Error = "ERROR",
+    Success = "SUCCESS",
 }
 
 const LogLevelOrder: Record<LogLevel, number> = {
@@ -22,6 +23,7 @@ const LogLevelOrder: Record<LogLevel, number> = {
     [LogLevel.Info]: 1,
     [LogLevel.Warn]: 2,
     [LogLevel.Error]: 3,
+    [LogLevel.Success]: 4,
 };
 
 export const shouldLog = (level: LogLevel, minLevel: LogLevel): boolean => {
@@ -34,8 +36,6 @@ export interface LogHandler {
 
 @Injectable()
 export class LogConsoleHandler implements LogHandler {
-    private readonly tag = "meta-core"
-
     private readonly level: LogLevel = LogLevel.Debug;
 
     public constructor() {
@@ -53,7 +53,7 @@ export class LogConsoleHandler implements LogHandler {
     }
 
     private format(color: LogColor, ...message: string[]): string {
-        return `^${color.valueOf().toString()}[${new Date().toISOString()}] [${this.tag}] ${message.join(" ")}^7`;
+        return `^${color.valueOf().toString()}[${new Date().toISOString()}] ${message.join(" ")}^7`;
     }
 }
 
@@ -81,6 +81,7 @@ const levelToColors = {
     [LogLevel.Info]: LogColor.Blue,
     [LogLevel.Warn]: LogColor.Yellow,
     [LogLevel.Error]: LogColor.Red,
+    [LogLevel.Success]: LogColor.Green,
 };
 
 @Injectable()
@@ -102,6 +103,10 @@ export class Logger {
 
     public error(...message: string[]): void {
         this.write(LogLevel.Error, ...message);
+    }
+
+    public success(...message: string[]): void {
+        this.write(LogLevel.Success, ...message);
     }
 
     public log(level: LogLevel, ...message: string[]): void {

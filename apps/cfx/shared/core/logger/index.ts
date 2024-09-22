@@ -39,7 +39,7 @@ export class LogConsoleHandler implements LogHandler {
     private readonly level: LogLevel = LogLevel.Debug;
 
     public constructor() {
-        // TOOD: add env for production, and add correct condition
+        // TODO: add env for production, and add correct condition
         const hasProduction = false
         if (hasProduction) {
             this.level = LogLevel.Info;

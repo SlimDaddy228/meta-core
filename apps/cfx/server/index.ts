@@ -13,8 +13,8 @@ async function startApplication() {
 
     const application = Application.create(
         ProviderClientLoader,
+        DatabaseModule,
         NuiModule,
-        DatabaseModule
     )
 
     application.start()

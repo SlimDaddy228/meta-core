@@ -4,4 +4,6 @@ export enum OnEventName {
     playerConnecting = "playerConnecting",
     playerDropped = "playerDropped",
     playerJoin = "playerJoin",
+    /** client side **/
+    playerSpawned = "playerSpawned"
 }

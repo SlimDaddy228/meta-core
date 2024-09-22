@@ -9,10 +9,12 @@ import {User} from "@server/user";
 import {UserIdStateProvider} from "@server/modules/user/user.state.id";
 import {UserSourceStateProvider} from "@server/modules/user/user.state.source";
 import {UserPendingStateProvider} from "@server/modules/user/user.state.pending";
+import {Tunnel} from "@core/decorations/tunnel";
+import {ConnectPlayerProviderServerRemote} from "@server/modules/types/connect/connect.player.provider";
 
 
 @Provider()
-export class ConnectPlayerProvider {
+export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote {
     @Inject(Logger)
     private logger: Logger;
 
@@ -37,6 +39,11 @@ export class ConnectPlayerProvider {
         }
 
         return identifiers
+    }
+
+    @Tunnel()
+    public onPlayerSpawn() {
+        console.log("player spawn")
     }
 
     private unloadPlayer(source: number) {
@@ -123,7 +130,7 @@ export class ConnectPlayerProvider {
 
             deferrals.update(translate("connect:success_loaded"))
 
-            deferrals.done(`connect success ${player}`)
+            deferrals.done()
         } catch (error) {
             const info = translate("connect:unknown_reject");
             this.logger.warn(info, error)

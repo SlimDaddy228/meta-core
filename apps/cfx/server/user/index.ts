@@ -1,8 +1,11 @@
 import {Prisma} from "@server/.prisma";
+import {injectable} from "inversify";
 
 type UserName = string | null
 type UserEndpoint = string | null
 
+
+@injectable()
 export class User {
     constructor(
         public readonly source: typeof global.source,

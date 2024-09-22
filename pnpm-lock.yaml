@@ -71,6 +71,9 @@ importers:
       inversify:
         specifier: ^6.0.2
         version: 6.0.2
+      inversify-inject-decorators:
+        specifier: ^3.1.0
+        version: 3.1.0
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -1527,6 +1530,9 @@ packages:
   interpret@3.1.1:
     resolution: {integrity: sha512-6xwYfHbajpoF0xLW+iwLkhwgvLoZDfjYfoFNu8ftMoXINzwuymNLd9u/KmwtdT2GbR+/Cz66otEGEVVUHX9QLQ==}
     engines: {node: '>=10.13.0'}
+
+  inversify-inject-decorators@3.1.0:
+    resolution: {integrity: sha512-/seBlVp5bXrLQS3DpKEmlgeZL6C7Tf/QITd+IMQrbBBGuCbxb7k3hRAWu9XSreNpFzLgSboz3sClLSEmGwHphw==}
 
   inversify@6.0.2:
     resolution: {integrity: sha512-i9m8j/7YIv4mDuYXUAcrpKPSaju/CIly9AHK5jvCBeoiM/2KEsuCQTTP+rzSWWpLYWRukdXFSl6ZTk2/uumbiA==}
@@ -4006,6 +4012,8 @@ snapshots:
       side-channel: 1.0.6
 
   interpret@3.1.1: {}
+
+  inversify-inject-decorators@3.1.0: {}
 
   inversify@6.0.2: {}
 

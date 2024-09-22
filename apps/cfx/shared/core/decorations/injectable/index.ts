@@ -1,5 +1,15 @@
 import {decorate, inject, injectable, multiInject} from "inversify";
 import {Container} from "@shared/core/container";
+import getDecorators from "inversify-inject-decorators";
+
+const {lazyInject} = getDecorators(Container);
+
+/**
+ * This is necessary if you need to create an instance of a class to which to pass parameters
+ * Used in combination with Container.inTransientScope
+ * @see https://github.com/inversify/inversify-inject-decorators?tab=readme-ov-file#basic-property-lazy-injection-with-lazyinject
+ */
+export const LazyInject = lazyInject
 
 export const Inject = inject;
 

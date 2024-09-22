@@ -121,6 +121,8 @@ export class ConnectPlayerProvider {
             this.logger.debug(`${name} (${user.endpoint}): (user_id = ${userId}) join`)
             emit(OnEventName.playerJoin)
 
+            deferrals.update(translate("connect:success_loaded"))
+
             deferrals.done(`connect success ${player}`)
         } catch (error) {
             const info = translate("connect:unknown_reject");

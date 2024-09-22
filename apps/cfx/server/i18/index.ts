@@ -6,7 +6,7 @@ import {resolve} from "path";
 i18next.use(Backend).init({
     lng: "ru",
     fallbackLng: "ru",
-    ns: ["common", "user"],
+    ns: ["common", "connect"],
     defaultNS: "common",
     backend: {
         loadPath: resolve(GetResourcePath(GetCurrentResourceName()), "apps/cfx/server/i18/locales/{{lng}}/{{ns}}.json"),
@@ -16,5 +16,8 @@ i18next.use(Backend).init({
         escapeValue: false,
     },
 });
+
+// eslint-disable-next-line import/no-named-as-default-member
+export const translate = i18next.t
 
 export default i18next;

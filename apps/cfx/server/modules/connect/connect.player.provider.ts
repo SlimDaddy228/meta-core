@@ -156,7 +156,7 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
 
             deferrals.update(translate("connect:success_loaded"))
 
-            deferrals.done("not entered")
+            deferrals.done()
         } catch (error) {
             const info = translate("connect:unknown_reject");
             this.logger.error(info, error)

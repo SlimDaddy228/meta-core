@@ -7,6 +7,8 @@ declare global {
     type UserSelectCharacter = Prisma.$UsersPayload["scalars"]["character_select"]
 
     type CharacterId = Prisma.$CharactersPayload["scalars"]["id"]
+    type CharacterStatus = Prisma.$CharacterStatusPayload["scalars"]
+    type CharacterCustomization = Prisma.$CharacterCustomizationPayload["scalars"]
 
     type PlayerSource = typeof global.source
 }

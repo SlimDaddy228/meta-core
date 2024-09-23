@@ -2,6 +2,7 @@ import {Inject, InjectableRequestScope} from "@core/decorations/injectable";
 import {PrismaProvider} from "@server/modules/database/prisma.provider";
 import {OnServerEventName} from "@shared/types/events";
 import {UserState} from "@server/user/state";
+import {CharacterState} from "@server/user/character/state";
 
 export enum UserCharacterLoadedState {
     SUCCESS_LOADED = 1,
@@ -17,15 +18,8 @@ export class UserCharacter {
     @Inject(UserState)
     private readonly userState: UserState
 
-    private _id: CharacterId = null
-
-    public get id(): CharacterId {
-        return this._id
-    }
-
-    public set id(id: CharacterId) {
-        this._id = id
-    }
+    @Inject(CharacterState)
+    private readonly characterState: CharacterState
 
     public async getAll() {
         return this.prismaProvider.characters.findMany({
@@ -59,12 +53,13 @@ export class UserCharacter {
             const character = await this.getById(id)
 
             if (character) {
-                this.id = character.id
+                this.characterState.id = character.id
 
-                if (this.id !== this.userState.selectCharacter) {
-                    this.userState.selectCharacter = this.id
+                if (this.characterState.id !== this.userState.selectCharacter) {
+                    this.userState.selectCharacter = this.characterState.id
                 }
 
+                await this.characterState.load()
                 emit(OnServerEventName.characterLoad)
 
                 return UserCharacterLoadedState.SUCCESS_LOADED

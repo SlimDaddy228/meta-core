@@ -143,9 +143,39 @@ exports.Prisma.CharactersScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CharacterCustomizationScalarFieldEnum = {
+  id: 'id',
+  character_id: 'character_id',
+  model: 'model',
+  components: 'components',
+  props: 'props',
+  faceFeatures: 'faceFeatures',
+  headBlend: 'headBlend',
+  overlays: 'overlays',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CharacterStatusScalarFieldEnum = {
+  id: 'id',
+  character_id: 'character_id',
+  health: 'health',
+  armour: 'armour',
+  heading: 'heading',
+  positionX: 'positionX',
+  positionY: 'positionY',
+  positionZ: 'positionZ',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.NullsOrder = {
@@ -153,11 +183,19 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
 
 exports.Prisma.ModelName = {
   Users: 'Users',
   UserIds: 'UserIds',
-  Characters: 'Characters'
+  Characters: 'Characters',
+  CharacterCustomization: 'CharacterCustomization',
+  CharacterStatus: 'CharacterStatus'
 };
 
 /**

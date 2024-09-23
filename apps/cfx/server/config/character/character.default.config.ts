@@ -1,13 +1,36 @@
 import {Prisma} from "@server/.prisma";
 
 const initialCustomization: Omit<Prisma.CharacterCustomizationCreateInput, "character"> = {
-    overlays: JSON.stringify({}),
-    faceFeatures: JSON.stringify({}),
-    model: 1,
-    components: JSON.stringify({}),
-    headBlend: JSON.stringify({}),
-    props: JSON.stringify({}),
+    model: GetHashKey("mp_m_freemode_01"),
+    components: JSON.stringify(
+        Array.from({length: 12}, () => [0, 0, 0])
+    ),
+    faceFeatures: JSON.stringify(
+        Array(20).fill(0.0)
+    ),
+    props: JSON.stringify(
+        Array.from({length: 8}, (_, i) =>
+            (i >= 3 && i <= 5)
+                ? null
+                : [-1, 0]
+        )
+    ),
+    headBlend: JSON.stringify(
+        [0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0]
+    ),
+    overlays: JSON.stringify(
+        Array.from({length: 13}, (_, i) => {
+            if ([1, 2, 10].includes(i)) {
+                return [255, 1.0, 1, 0, 0];
+            } else if ([5, 8].includes(i)) {
+                return [255, 1.0, 2, 0, 0];
+            } else {
+                return [255, 1.0, 0, 0, 0];
+            }
+        })
+    )
 }
+
 
 const initialStatus: Omit<Prisma.CharacterStatusCreateInput, "character"> = {
     armour: 0,

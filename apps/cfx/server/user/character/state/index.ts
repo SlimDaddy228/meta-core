@@ -18,7 +18,6 @@ export class CharacterState {
     }
 
     public async load() {
-        console.log(this.id, "this character id")
         await this.prismaProvider.characterStatus.upsert({
             where: {
                 character_id: this._id

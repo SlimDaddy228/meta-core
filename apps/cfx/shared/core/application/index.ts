@@ -1,7 +1,7 @@
 import {Inject, Injectable} from "@core/decorations/injectable";
 import {Container} from "@core/container";
 import {ModuleLoader} from "@core/loaders/module.loader";
-import {OnEventName} from "@shared/types/events";
+import {OnSharedEventName} from "@shared/types/events";
 import {Logger} from "@core/logger";
 
 type Module = any
@@ -35,7 +35,7 @@ export class Application {
         }
 
         this.logger.debug("starting application")
-        emit(OnEventName.onResourceStart)
+        emit(OnSharedEventName.onResourceStart)
     }
 
     private addModule(module: any) {

@@ -47,7 +47,7 @@ export class UserProvider {
         return createdUser.id
     }
 
-    public async isBanned(id: number): Promise<boolean> {
+    public async isBanned(id: UserId): Promise<boolean> {
         const result = await this.prismaProvider.users.findFirst({
             where: {
                 id
@@ -57,7 +57,7 @@ export class UserProvider {
         return result.banned
     }
 
-    public async isWhitelisted(id: number): Promise<boolean> {
+    public async isWhitelisted(id: UserId): Promise<boolean> {
         const result = await this.prismaProvider.users.findFirst({
             where: {
                 id
@@ -65,5 +65,13 @@ export class UserProvider {
         })
 
         return result.whitelisted
+    }
+
+    public async get(id: UserId) {
+        return this.prismaProvider.users.findFirst({
+            where: {
+                id
+            }
+        })
     }
 }

@@ -1,9 +1,17 @@
-export enum OnEventName {
+export enum OnSharedEventName {
     onResourceStart = "start",
     onResourceStop = "onResourceStop",
-    playerConnecting = "playerConnecting",
+}
+
+export enum OnClientEventName {
+    playerSpawned = "playerSpawned"
+}
+
+export enum OnServerEventName {
     playerDropped = "playerDropped",
     playerJoin = "playerJoin",
-    /** client side **/
-    playerSpawned = "playerSpawned"
+    playerConnecting = "playerConnecting",
+
+    characterLoad = "characterLoad",
+    characterUnload = "characterUnload"
 }

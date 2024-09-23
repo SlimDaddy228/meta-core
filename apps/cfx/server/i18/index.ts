@@ -11,7 +11,7 @@ i18next.use(Backend).init({
     backend: {
         loadPath: resolve(GetResourcePath(GetCurrentResourceName()), "apps/cfx/server/i18/locales/{{lng}}/{{ns}}.json"),
     },
-    debug: true,
+    debug: false,
     interpolation: {
         escapeValue: false,
     },

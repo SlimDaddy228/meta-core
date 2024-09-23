@@ -1,6 +1,6 @@
 import {Provider} from "@core/decorations/provider";
 import {OnEvent} from "@core/decorations/event";
-import {OnEventName} from "@shared/types/events";
+import {OnServerEventName} from "@shared/types/events";
 import {translate} from "@server/i18"
 import {Inject} from "@core/decorations/injectable";
 import {Logger} from "@core/logger";
@@ -11,6 +11,8 @@ import {UserSourceStateProvider} from "@server/modules/user/user.state.source";
 import {UserPendingStateProvider} from "@server/modules/user/user.state.pending";
 import {Tunnel} from "@core/decorations/tunnel";
 import {ConnectPlayerProviderServerRemote} from "@server/modules/types/connect/connect.player.provider";
+import {Container} from "@core/container";
+import {UserCharacterLoadedState} from "@server/user/character";
 
 
 @Provider()
@@ -47,7 +49,7 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
     }
 
     private unloadPlayer(source: number) {
-        const identifiers = this.getPlayerIdentifiers(String(source))
+        const identifiers = this.getPlayerIdentifiers(source.toString())
         const pendingId = identifiers.join(":")
         let user = this.userSourceStateProvider.getUser(source)
 
@@ -56,15 +58,15 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
         }
 
         if (user) {
-            this.userIdStateProvider.removeUser(user.id)
-            this.userSourceStateProvider.removeUser(user.source)
+            this.userIdStateProvider.removeUser(user.state.id)
+            this.userSourceStateProvider.removeUser(user.state.source)
             this.userPendingStateProvider.removeUser(pendingId)
 
-            this.logger.debug(`${user.name} (${user.endpoint}): (user_id = ${user.id}) disconnect`)
+            this.logger.debug(`${user.state.name} (${user.state.endpoint}): (user_id = ${user.state.id}) disconnect`)
         }
     }
 
-    @OnEvent({eventName: OnEventName.playerConnecting})
+    @OnEvent({eventName: OnServerEventName.playerConnecting})
     private async onPlayerConnect(name: string, _, deferrals) {
         try {
             deferrals.defer()
@@ -72,11 +74,11 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
 
             deferrals.update(translate("connect:loading"))
 
-            const identifiers = this.getPlayerIdentifiers(String(player))
+            const identifiers = this.getPlayerIdentifiers(player.toString())
 
             if (identifiers.length === 0) {
                 const info = translate("connect:identifiers_not_found", {playerName: name});
-                this.logger.debug(info)
+                this.logger.warn(info)
                 return deferrals.done(info)
             }
 
@@ -85,7 +87,7 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
 
             if (!userId) {
                 const info = translate("connect:error_identifiers", {playerName: name});
-                this.logger.debug(info)
+                this.logger.warn(info)
                 return deferrals.done(info)
             }
 
@@ -116,24 +118,48 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
                 return deferrals.done(info)
             }
 
-            const user = new User(player, userId)
+            const userData = await this.userProvider.get(userId)
+            const user = Container.get(User)
 
-            user.name = name
-            user.endpoint = GetPlayerEndpoint(String(player))
+            user.state.source = player
+            user.state.id = userId
+            user.state.name = name
+            user.state.endpoint = GetPlayerEndpoint(player.toString())
+            user.state.selectCharacter = userData.character_select
 
             this.userIdStateProvider.addUser(userId, user)
             this.userSourceStateProvider.addUser(player, user)
             this.userPendingStateProvider.addUser(identifiers.join(":"), user)
 
-            this.logger.debug(`${name} (${user.endpoint}): (user_id = ${userId}) join`)
-            emit(OnEventName.playerJoin)
+            const hasLoadedCharacter = await user.character.use(user.state.selectCharacter)
+
+            if (hasLoadedCharacter === UserCharacterLoadedState.INVALID_CHARACTER) {
+                const info = translate("connect:character_created_error");
+                this.logger.warn(info)
+                return deferrals.done(info)
+            }
+
+            if (hasLoadedCharacter === UserCharacterLoadedState.NO_CREATED_CHARACTERS) {
+                const createdCharacter = await user.character.create()
+
+                const result = await user.character.use(createdCharacter.id)
+
+                if (result !== UserCharacterLoadedState.SUCCESS_LOADED) {
+                    const info = translate("connect:character_created_error");
+                    this.logger.warn(info)
+                    return deferrals.done(info)
+                }
+            }
+
+            this.logger.debug(`${name} (${user.state.endpoint}): (user_id = ${userId}) join`)
+            emit(OnServerEventName.playerJoin)
 
             deferrals.update(translate("connect:success_loaded"))
 
-            deferrals.done()
+            deferrals.done("not entered")
         } catch (error) {
             const info = translate("connect:unknown_reject");
-            this.logger.warn(info, error)
+            this.logger.error(info, error)
             deferrals.done(info)
         }
     }

@@ -32,3 +32,31 @@ export const Injectable =
                 Container.bind(item).toService(first);
             }
         };
+
+export const InjectableTransientScope =
+    (...token: any[]): ClassDecorator =>
+        target => {
+            decorate(injectable(), target);
+            if (token.length === 0) {
+                token.push(target);
+            }
+
+            const first = token.shift();
+            Container.bind(first)
+                .to(target as any)
+                .inTransientScope();
+        };
+
+export const InjectableRequestScope =
+    (...token: any[]): ClassDecorator =>
+        target => {
+            decorate(injectable(), target);
+            if (token.length === 0) {
+                token.push(target);
+            }
+
+            const first = token.shift();
+            Container.bind(first)
+                .to(target as any)
+                .inRequestScope();
+        };

@@ -1,8 +1,6 @@
 import {Provider} from "@core/decorations/provider";
 import {User} from "@server/user";
-import {Prisma} from "@server/.prisma";
 
-type UserId = Prisma.$UsersPayload["scalars"]["id"]
 type Users = Record<UserId, User>
 
 @Provider()

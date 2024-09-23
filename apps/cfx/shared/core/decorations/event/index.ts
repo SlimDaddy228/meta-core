@@ -1,9 +1,9 @@
 import {generateEventId} from "@shared/utils/generate-event-id";
 import {setMethodMetadata} from "@shared/utils/reflect/method";
-import {OnEventName} from "@shared/types/events";
+import {OnClientEventName, OnServerEventName, OnSharedEventName} from "@shared/types/events";
 
 export type OnEventOptions = {
-    eventName: OnEventName;
+    eventName: OnSharedEventName | OnClientEventName | OnServerEventName;
 };
 
 export type OnEventMetadata = {

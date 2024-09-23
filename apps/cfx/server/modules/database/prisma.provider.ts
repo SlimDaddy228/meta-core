@@ -2,7 +2,7 @@ import {Provider} from "@core/decorations/provider";
 import {Prisma, PrismaClient} from "@server/.prisma";
 import {findProcessByFile} from "@shared/utils/process/find-process-by-file";
 import {OnEvent} from "@core/decorations/event";
-import {OnEventName} from "@shared/types/events";
+import {OnSharedEventName} from "@shared/types/events";
 import {JsPromise} from "@server/.prisma/runtime/library";
 import {killProcess} from "@shared/utils/process/kill-process";
 import {Inject} from "@core/decorations/injectable";
@@ -31,7 +31,7 @@ export class PrismaProvider extends PrismaClient<Prisma.PrismaClientOptions, "qu
         this.createLogs()
     }
 
-    @OnEvent({eventName: OnEventName.onResourceStop})
+    @OnEvent({eventName: OnSharedEventName.onResourceStop})
     public onStop(resourceName: string) {
         if (resourceName === GetCurrentResourceName()) {
             this.$disconnect()
@@ -53,7 +53,7 @@ export class PrismaProvider extends PrismaClient<Prisma.PrismaClientOptions, "qu
         this.processId = id;
     }
 
-    @OnEvent({eventName: OnEventName.onResourceStart})
+    @OnEvent({eventName: OnSharedEventName.onResourceStart})
     private async createConnection() {
         try {
             this.logger.info(this.generateLogText("Start connection to database..."))

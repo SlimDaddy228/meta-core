@@ -5,6 +5,7 @@ import {NuiModule} from "@server/modules/nui/nui.module";
 import {DatabaseModule} from "@server/modules/database/database.module";
 import {ConnectModule} from "@server/modules/connect/connect.module";
 import {UserModule} from "@server/modules/user/user.module";
+import {PlayerModule} from "@server/modules/player/player.module";
 
 async function startApplication() {
     try {
@@ -18,6 +19,7 @@ async function startApplication() {
         DatabaseModule,
         UserModule,
         ConnectModule,
+        PlayerModule,
         NuiModule,
     )
 

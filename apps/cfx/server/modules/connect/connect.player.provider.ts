@@ -45,12 +45,31 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
 
     @Tunnel()
     public onPlayerSpawn() {
-        console.log("player spawn")
+        const source = global.source
+        const pendingId = this.getPendingIdBySource(source)
+
+        let user = this.userSourceStateProvider.getUser(source)
+
+        if (!user) {
+            user = this.userPendingStateProvider.getUser(pendingId)
+        }
+
+        this.userSourceStateProvider.removeUser(user.state.source)
+        this.userPendingStateProvider.removeUser(pendingId)
+
+        user.state.source = source
+        this.userSourceStateProvider.addUser(source, user)
+
+        emit(OnServerEventName.playerSpawn, source)
+    }
+
+    private getPendingIdBySource(source: PlayerSource): string {
+        const identifiers = this.getPlayerIdentifiers(source.toString())
+        return identifiers.join(":")
     }
 
     private unloadPlayer(source: number) {
-        const identifiers = this.getPlayerIdentifiers(source.toString())
-        const pendingId = identifiers.join(":")
+        const pendingId = this.getPendingIdBySource(source)
         let user = this.userSourceStateProvider.getUser(source)
 
         if (!user) {
@@ -129,8 +148,10 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
 
             this.userIdStateProvider.addUser(userId, user)
             this.userSourceStateProvider.addUser(player, user)
+            console.log(identifiers.join(":"))
             this.userPendingStateProvider.addUser(identifiers.join(":"), user)
 
+            console.log(player, "loaded user")
             const hasLoadedCharacter = await user.character.use(user.state.selectCharacter)
 
             if (hasLoadedCharacter === UserCharacterLoadedState.INVALID_CHARACTER) {
@@ -156,7 +177,7 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
 
             deferrals.update(translate("connect:success_loaded"))
 
-            deferrals.done("123")
+            deferrals.done()
         } catch (error) {
             const info = translate("connect:unknown_reject");
             this.logger.error(info, error)

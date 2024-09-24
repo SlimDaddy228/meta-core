@@ -10,13 +10,6 @@ export class NuiMenuProvider implements NuiMenuProviderServerRemote {
     @Remote()
     private readonly remote: ClientRemote<NuiMenuProviderClientRemote>
 
-    constructor() {
-        setInterval(async () => {
-            const clientResult = await this.remote.createPrint(1)
-            console.log(clientResult, ":DATA_FROM_CLIENT")
-        }, 1000)
-    }
-
     @Tunnel()
     public await(message: string) {
         return "to-to-to" + message

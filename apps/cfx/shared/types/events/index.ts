@@ -11,6 +11,7 @@ export enum OnServerEventName {
     playerDropped = "playerDropped",
     playerJoin = "playerJoin",
     playerConnecting = "playerConnecting",
+    playerSpawn = "playerSpawn",
 
     characterLoad = "characterLoad",
     characterUnload = "characterUnload"

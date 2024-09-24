@@ -45,10 +45,11 @@ export function getInterface(name: string, identifier: string = GetCurrentResour
             const isAvoidMethod = memberName.startsWith("_")
 
             if (isAvoidMethod) {
+                const avoidMemberName = memberName.slice(1, memberName.length)
                 if (IS_SERVER) {
-                    emitNet(requestTunnelEventName, source, memberName, argumentsWithoutPlayerSource, identifier, -1);
+                    emitNet(requestTunnelEventName, source, avoidMemberName, argumentsWithoutPlayerSource, identifier, -1);
                 } else {
-                    emitNet(requestTunnelEventName, memberName, args, identifier, -1);
+                    emitNet(requestTunnelEventName, avoidMemberName, args, identifier, -1);
                 }
             }
 

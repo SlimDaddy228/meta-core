@@ -1,6 +1,8 @@
 import {Prisma} from "@server/.prisma";
 
 declare global {
+    type Vector3 = number[]
+    
     type UserId = Prisma.$UsersPayload["scalars"]["id"]
     type UserName = string | null
     type UserEndpoint = string | null
@@ -14,4 +16,3 @@ declare global {
 }
 
 export {}
-

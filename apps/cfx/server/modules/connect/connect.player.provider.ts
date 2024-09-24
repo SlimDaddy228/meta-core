@@ -1,6 +1,6 @@
 import {Provider} from "@core/decorations/provider";
 import {OnEvent} from "@core/decorations/event";
-import {OnServerEventName} from "@shared/types/events";
+import {OnServerEventName, OnSharedEventName} from "@shared/types/events";
 import {translate} from "@server/i18"
 import {Inject} from "@core/decorations/injectable";
 import {Logger} from "@core/logger";
@@ -32,17 +32,6 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
     @Inject(UserPendingStateProvider)
     private userPendingStateProvider: UserPendingStateProvider
 
-    public getPlayerIdentifiers(source: string): string[] {
-        const identifiers: string[] = [];
-
-        for (let i = 0; i < GetNumPlayerIdentifiers(source); i++) {
-            const identifier = GetPlayerIdentifier(source, i);
-            identifiers.push(identifier);
-        }
-
-        return identifiers
-    }
-
     @Tunnel()
     public onPlayerSpawn() {
         const source = global.source
@@ -64,7 +53,7 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
     }
 
     private getPendingIdBySource(source: PlayerSource): string {
-        const identifiers = this.getPlayerIdentifiers(source.toString())
+        const identifiers = getPlayerIdentifiers(source)
         return identifiers.join(":")
     }
 
@@ -93,7 +82,7 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
 
             deferrals.update(translate("connect:loading"))
 
-            const identifiers = this.getPlayerIdentifiers(player.toString())
+            const identifiers = getPlayerIdentifiers(player.toString())
 
             if (identifiers.length === 0) {
                 const info = translate("connect:identifiers_not_found", {playerName: name});
@@ -182,6 +171,31 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
             const info = translate("connect:unknown_reject");
             this.logger.error(info, error)
             deferrals.done(info)
+        }
+    }
+
+
+    /**
+     * Only dev for restart resource
+     */
+    @OnEvent({eventName: OnSharedEventName.onApplicationStart})
+    private async restartModules() {
+        for (const source of getPlayers()) {
+            const deferralsBlank = {
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                done: () => {
+                },
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                update: () => {
+                },
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                defer: () => {
+                }
+            }
+            global.source = Number(source)
+            await this.onPlayerConnect(GetPlayerName(source), {}, deferralsBlank)
+            global.source = Number(source)
+            this.onPlayerSpawn()
         }
     }
 }

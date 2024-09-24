@@ -53,7 +53,7 @@ export class PrismaProvider extends PrismaClient<Prisma.PrismaClientOptions, "qu
         this.processId = id;
     }
 
-    @OnEvent({eventName: OnSharedEventName.onResourceStart})
+    @OnEvent({eventName: OnSharedEventName.onApplicationStart})
     private async createConnection() {
         try {
             this.logger.info(this.generateLogText("Start connection to database..."))

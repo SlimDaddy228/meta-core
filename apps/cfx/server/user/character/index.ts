@@ -12,14 +12,14 @@ export enum UserCharacterLoadedState {
 
 @InjectableRequestScope()
 export class UserCharacter {
+    @Inject(CharacterState)
+    public readonly state: CharacterState
+
     @Inject(PrismaProvider)
     private readonly prismaProvider: PrismaProvider
 
     @Inject(UserState)
     private readonly userState: UserState
-
-    @Inject(CharacterState)
-    private readonly characterState: CharacterState
 
     public async getAll() {
         return this.prismaProvider.characters.findMany({
@@ -53,13 +53,13 @@ export class UserCharacter {
             const character = await this.getById(id)
 
             if (character) {
-                this.characterState.id = character.id
+                this.state.id = character.id
 
-                if (this.characterState.id !== this.userState.selectCharacter) {
-                    this.userState.selectCharacter = this.characterState.id
+                if (this.state.id !== this.userState.selectCharacter) {
+                    this.userState.selectCharacter = this.state.id
                 }
 
-                await this.characterState.load()
+                await this.state.load()
                 emit(OnServerEventName.characterLoad)
 
                 return UserCharacterLoadedState.SUCCESS_LOADED

@@ -35,7 +35,7 @@ export class Application {
         }
 
         this.logger.debug("starting application")
-        emit(OnSharedEventName.onResourceStart)
+        emit(OnSharedEventName.onApplicationStart)
     }
 
     private addModule(module: any) {

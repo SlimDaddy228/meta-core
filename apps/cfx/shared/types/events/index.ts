@@ -1,5 +1,5 @@
 export enum OnSharedEventName {
-    onResourceStart = "start",
+    onApplicationStart = "application:start",
     onResourceStop = "onResourceStop",
 }
 

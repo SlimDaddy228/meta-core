@@ -18,7 +18,8 @@
     "esModuleInterop": true
   },
   "include": [
-    "./**/*"
+    "./**/*",
+    "../shared/**/*"
   ],
   "exclude": [
     "**/node_modules"

@@ -17,6 +17,7 @@ export default defineConfig({
       '@images': path.resolve(__dirname, './src/assets/images'),
       '@styles': path.resolve(__dirname, './src/assets/styles'),
       '@components': path.resolve(__dirname, './src/library/components'),
+      '@ui': path.resolve(__dirname, './src/library/components/ui'),
       '@drivers': path.resolve(__dirname, './src/library/drivers'),
       '@utils': path.resolve(__dirname, './src/library/utils'),
       '@slices': path.resolve(__dirname, './src/slices'),

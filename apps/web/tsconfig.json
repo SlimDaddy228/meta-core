@@ -10,6 +10,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -33,14 +34,17 @@
       "@styles/*": [
         "./src/assets/styles/*"
       ],
-      "@components/*": [
-        "./src/slices/components/*"
-      ],
       "@slices/*": [
         "./src/slices/*"
       ],
+      "@components/*": [
+        "./src/library/components/*"
+      ],
       "@library/*": [
         "./src/library/*"
+      ],
+      "@hooks/*": [
+        "./src/library/hooks*"
       ],
       "@drivers/*": [
         "./src/library/drivers/*"

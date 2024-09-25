@@ -1,0 +1,137 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "unicorn",
+    "prettier",
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "airbnb",
+    "plugin:prettier/recommended",
+    "plugin:unicorn/recommended",
+    "plugin:import/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./tsconfig.json"
+      },
+      "node": {
+        "paths": [
+          "."
+        ]
+      }
+    }
+  },
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "rules": {
+    "react/jsx-indent": [
+      "error",
+      2
+    ],
+    // Устанавливаем отступ 2 пробела между JSX и функциями
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "no-underscore-dangle": "off",
+    "unicorn/consistent-function-scoping": "off",
+    "unicorn/no-static-only-class": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-no-useless-fragment": "off",
+    "import/no-cycle": "off",
+    "import/no-extraneous-dependencies": "off",
+    "prefer-promise-reject-errors": "off",
+    "unicorn/no-array-reduce": "off",
+    "unicorn/no-array-for-each": "off",
+    "unicorn/prefer-negative-index": "off",
+    "unicorn/prefer-object-from-entries": "off",
+    "unicorn/numeric-separators-style": "off",
+    "func-names": "off",
+    "no-extend-native": "off",
+    "unicorn/no-null": "off",
+    "unicorn/prefer-module": "off",
+    "import/prefer-default-export": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-no-bind": "off",
+    "react/function-component-definition": "off",
+    "unicorn/no-useless-promise-resolve-reject": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "prettier/prettier": [
+      "warn",
+      {
+        "tabWidth": 2,
+        "singleQuote": true,
+        "semi": false,
+        "bracketSpacing": false,
+        "endOfLine": "auto"
+      }
+    ],
+    "react/jsx-filename-extension": [
+      2,
+      {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      }
+    ],
+    "unicorn/filename-case": [
+      "error",
+      {
+        "case": "kebabCase"
+      }
+    ],
+    "unicorn/prevent-abbreviations": [
+      "error",
+      {
+        "replacements": {
+          "e": {
+            "event": false,
+            "error": false
+          }
+        },
+        "allowList": {
+          "e": true,
+          "Props": true,
+          "Ref": true,
+          "ref": true,
+          "ProcessEnv": true
+        }
+      }
+    ],
+    "no-unused-vars": "warn",
+    "no-shadow": "off",
+    "no-return-await": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "unicorn/no-array-callback-reference": "off",
+    "unicorn/prefer-dom-node-remove": "off",
+    "class-methods-use-this": "off",
+    "react/require-default-props": 0,
+    "no-empty-function": "off",
+    "@typescript-eslint/no-empty-function": "off"
+  }
+}

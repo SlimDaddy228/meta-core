@@ -1,11 +1,61 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@assets/*": [
+        "./src/assets/*"
+      ],
+      "@images/*": [
+        "./src/assets/images/*"
+      ],
+      "@styles/*": [
+        "./src/assets/styles/*"
+      ],
+      "@components/*": [
+        "./src/slices/components/*"
+      ],
+      "@slices/*": [
+        "./src/slices/*"
+      ],
+      "@library/*": [
+        "./src/library/*"
+      ],
+      "@drivers/*": [
+        "./src/library/drivers/*"
+      ],
+      "@utils/*": [
+        "./src/library/utils/*"
+      ],
+      "@ui/*": [
+        "./src/library/components/ui/*"
+      ]
     }
+  },
+  "include": [
+    "src",
+    "**/*.d.ts",
+    "src/**/*.d.ts"
   ]
 }

@@ -4062,18 +4062,21 @@ export namespace Prisma {
     id: number | null
     character_id: number | null
     model: number | null
+    eyeColor: number | null
   }
 
   export type CharacterCustomizationSumAggregateOutputType = {
     id: number | null
     character_id: number | null
     model: number | null
+    eyeColor: number | null
   }
 
   export type CharacterCustomizationMinAggregateOutputType = {
     id: number | null
     character_id: number | null
     model: number | null
+    eyeColor: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4082,6 +4085,7 @@ export namespace Prisma {
     id: number | null
     character_id: number | null
     model: number | null
+    eyeColor: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4095,6 +4099,8 @@ export namespace Prisma {
     faceFeatures: number
     headBlend: number
     overlays: number
+    hairColor: number
+    eyeColor: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4105,18 +4111,21 @@ export namespace Prisma {
     id?: true
     character_id?: true
     model?: true
+    eyeColor?: true
   }
 
   export type CharacterCustomizationSumAggregateInputType = {
     id?: true
     character_id?: true
     model?: true
+    eyeColor?: true
   }
 
   export type CharacterCustomizationMinAggregateInputType = {
     id?: true
     character_id?: true
     model?: true
+    eyeColor?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4125,6 +4134,7 @@ export namespace Prisma {
     id?: true
     character_id?: true
     model?: true
+    eyeColor?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4138,6 +4148,8 @@ export namespace Prisma {
     faceFeatures?: true
     headBlend?: true
     overlays?: true
+    hairColor?: true
+    eyeColor?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -4238,6 +4250,8 @@ export namespace Prisma {
     faceFeatures: JsonValue
     headBlend: JsonValue
     overlays: JsonValue
+    hairColor: JsonValue
+    eyeColor: number
     createdAt: Date
     updatedAt: Date
     _count: CharacterCustomizationCountAggregateOutputType | null
@@ -4270,6 +4284,8 @@ export namespace Prisma {
     faceFeatures?: boolean
     headBlend?: boolean
     overlays?: boolean
+    hairColor?: boolean
+    eyeColor?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     character?: boolean | CharactersDefaultArgs<ExtArgs>
@@ -4285,6 +4301,8 @@ export namespace Prisma {
     faceFeatures?: boolean
     headBlend?: boolean
     overlays?: boolean
+    hairColor?: boolean
+    eyeColor?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -4307,6 +4325,8 @@ export namespace Prisma {
       faceFeatures: Prisma.JsonValue
       headBlend: Prisma.JsonValue
       overlays: Prisma.JsonValue
+      hairColor: Prisma.JsonValue
+      eyeColor: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["characterCustomization"]>
@@ -4687,6 +4707,8 @@ export namespace Prisma {
     readonly faceFeatures: FieldRef<"CharacterCustomization", 'Json'>
     readonly headBlend: FieldRef<"CharacterCustomization", 'Json'>
     readonly overlays: FieldRef<"CharacterCustomization", 'Json'>
+    readonly hairColor: FieldRef<"CharacterCustomization", 'Json'>
+    readonly eyeColor: FieldRef<"CharacterCustomization", 'Int'>
     readonly createdAt: FieldRef<"CharacterCustomization", 'DateTime'>
     readonly updatedAt: FieldRef<"CharacterCustomization", 'DateTime'>
   }
@@ -6054,6 +6076,8 @@ export namespace Prisma {
     faceFeatures: 'faceFeatures',
     headBlend: 'headBlend',
     overlays: 'overlays',
+    hairColor: 'hairColor',
+    eyeColor: 'eyeColor',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -6351,6 +6375,8 @@ export namespace Prisma {
     faceFeatures?: JsonFilter<"CharacterCustomization">
     headBlend?: JsonFilter<"CharacterCustomization">
     overlays?: JsonFilter<"CharacterCustomization">
+    hairColor?: JsonFilter<"CharacterCustomization">
+    eyeColor?: IntFilter<"CharacterCustomization"> | number
     createdAt?: DateTimeFilter<"CharacterCustomization"> | Date | string
     updatedAt?: DateTimeFilter<"CharacterCustomization"> | Date | string
     character?: XOR<CharactersRelationFilter, CharactersWhereInput>
@@ -6365,6 +6391,8 @@ export namespace Prisma {
     faceFeatures?: SortOrder
     headBlend?: SortOrder
     overlays?: SortOrder
+    hairColor?: SortOrder
+    eyeColor?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     character?: CharactersOrderByWithRelationInput
@@ -6382,6 +6410,8 @@ export namespace Prisma {
     faceFeatures?: JsonFilter<"CharacterCustomization">
     headBlend?: JsonFilter<"CharacterCustomization">
     overlays?: JsonFilter<"CharacterCustomization">
+    hairColor?: JsonFilter<"CharacterCustomization">
+    eyeColor?: IntFilter<"CharacterCustomization"> | number
     createdAt?: DateTimeFilter<"CharacterCustomization"> | Date | string
     updatedAt?: DateTimeFilter<"CharacterCustomization"> | Date | string
     character?: XOR<CharactersRelationFilter, CharactersWhereInput>
@@ -6396,6 +6426,8 @@ export namespace Prisma {
     faceFeatures?: SortOrder
     headBlend?: SortOrder
     overlays?: SortOrder
+    hairColor?: SortOrder
+    eyeColor?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CharacterCustomizationCountOrderByAggregateInput
@@ -6417,6 +6449,8 @@ export namespace Prisma {
     faceFeatures?: JsonWithAggregatesFilter<"CharacterCustomization">
     headBlend?: JsonWithAggregatesFilter<"CharacterCustomization">
     overlays?: JsonWithAggregatesFilter<"CharacterCustomization">
+    hairColor?: JsonWithAggregatesFilter<"CharacterCustomization">
+    eyeColor?: IntWithAggregatesFilter<"CharacterCustomization"> | number
     createdAt?: DateTimeWithAggregatesFilter<"CharacterCustomization"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CharacterCustomization"> | Date | string
   }
@@ -6686,6 +6720,8 @@ export namespace Prisma {
     faceFeatures: JsonNullValueInput | InputJsonValue
     headBlend: JsonNullValueInput | InputJsonValue
     overlays: JsonNullValueInput | InputJsonValue
+    hairColor: JsonNullValueInput | InputJsonValue
+    eyeColor: number
     createdAt?: Date | string
     updatedAt?: Date | string
     character: CharactersCreateNestedOneWithoutCustomizationInput
@@ -6700,6 +6736,8 @@ export namespace Prisma {
     faceFeatures: JsonNullValueInput | InputJsonValue
     headBlend: JsonNullValueInput | InputJsonValue
     overlays: JsonNullValueInput | InputJsonValue
+    hairColor: JsonNullValueInput | InputJsonValue
+    eyeColor: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6711,6 +6749,8 @@ export namespace Prisma {
     faceFeatures?: JsonNullValueInput | InputJsonValue
     headBlend?: JsonNullValueInput | InputJsonValue
     overlays?: JsonNullValueInput | InputJsonValue
+    hairColor?: JsonNullValueInput | InputJsonValue
+    eyeColor?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     character?: CharactersUpdateOneRequiredWithoutCustomizationNestedInput
@@ -6725,6 +6765,8 @@ export namespace Prisma {
     faceFeatures?: JsonNullValueInput | InputJsonValue
     headBlend?: JsonNullValueInput | InputJsonValue
     overlays?: JsonNullValueInput | InputJsonValue
+    hairColor?: JsonNullValueInput | InputJsonValue
+    eyeColor?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6738,6 +6780,8 @@ export namespace Prisma {
     faceFeatures: JsonNullValueInput | InputJsonValue
     headBlend: JsonNullValueInput | InputJsonValue
     overlays: JsonNullValueInput | InputJsonValue
+    hairColor: JsonNullValueInput | InputJsonValue
+    eyeColor: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6749,6 +6793,8 @@ export namespace Prisma {
     faceFeatures?: JsonNullValueInput | InputJsonValue
     headBlend?: JsonNullValueInput | InputJsonValue
     overlays?: JsonNullValueInput | InputJsonValue
+    hairColor?: JsonNullValueInput | InputJsonValue
+    eyeColor?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6762,6 +6808,8 @@ export namespace Prisma {
     faceFeatures?: JsonNullValueInput | InputJsonValue
     headBlend?: JsonNullValueInput | InputJsonValue
     overlays?: JsonNullValueInput | InputJsonValue
+    hairColor?: JsonNullValueInput | InputJsonValue
+    eyeColor?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7183,6 +7231,8 @@ export namespace Prisma {
     faceFeatures?: SortOrder
     headBlend?: SortOrder
     overlays?: SortOrder
+    hairColor?: SortOrder
+    eyeColor?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -7191,12 +7241,14 @@ export namespace Prisma {
     id?: SortOrder
     character_id?: SortOrder
     model?: SortOrder
+    eyeColor?: SortOrder
   }
 
   export type CharacterCustomizationMaxOrderByAggregateInput = {
     id?: SortOrder
     character_id?: SortOrder
     model?: SortOrder
+    eyeColor?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -7205,6 +7257,7 @@ export namespace Prisma {
     id?: SortOrder
     character_id?: SortOrder
     model?: SortOrder
+    eyeColor?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -7213,6 +7266,7 @@ export namespace Prisma {
     id?: SortOrder
     character_id?: SortOrder
     model?: SortOrder
+    eyeColor?: SortOrder
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -7976,6 +8030,8 @@ export namespace Prisma {
     faceFeatures: JsonNullValueInput | InputJsonValue
     headBlend: JsonNullValueInput | InputJsonValue
     overlays: JsonNullValueInput | InputJsonValue
+    hairColor: JsonNullValueInput | InputJsonValue
+    eyeColor: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7988,6 +8044,8 @@ export namespace Prisma {
     faceFeatures: JsonNullValueInput | InputJsonValue
     headBlend: JsonNullValueInput | InputJsonValue
     overlays: JsonNullValueInput | InputJsonValue
+    hairColor: JsonNullValueInput | InputJsonValue
+    eyeColor: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8075,6 +8133,8 @@ export namespace Prisma {
     faceFeatures?: JsonNullValueInput | InputJsonValue
     headBlend?: JsonNullValueInput | InputJsonValue
     overlays?: JsonNullValueInput | InputJsonValue
+    hairColor?: JsonNullValueInput | InputJsonValue
+    eyeColor?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8087,6 +8147,8 @@ export namespace Prisma {
     faceFeatures?: JsonNullValueInput | InputJsonValue
     headBlend?: JsonNullValueInput | InputJsonValue
     overlays?: JsonNullValueInput | InputJsonValue
+    hairColor?: JsonNullValueInput | InputJsonValue
+    eyeColor?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

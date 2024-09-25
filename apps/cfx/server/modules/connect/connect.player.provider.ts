@@ -49,7 +49,9 @@ export class ConnectPlayerProvider implements ConnectPlayerProviderServerRemote 
         user.state.source = source
         this.userSourceStateProvider.addUser(source, user)
 
-        emit(OnServerEventName.playerSpawn, source)
+        setTimeout(() => {
+            emit(OnServerEventName.playerSpawn, source)
+        }, 2000)
     }
 
     private getPendingIdBySource(source: PlayerSource): string {

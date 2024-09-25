@@ -152,6 +152,8 @@ exports.Prisma.CharacterCustomizationScalarFieldEnum = {
   faceFeatures: 'faceFeatures',
   headBlend: 'headBlend',
   overlays: 'overlays',
+  hairColor: 'hairColor',
+  eyeColor: 'eyeColor',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

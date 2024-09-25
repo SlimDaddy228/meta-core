@@ -14,4 +14,8 @@ export interface PlayerProviderClientRemote {
     setArmour(armour: number): void
 
     getArmour(): number
+
+    setCustomization(customization: Customization): void
+
+    getCustomization(): Todo
 }

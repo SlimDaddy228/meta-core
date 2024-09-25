@@ -22,7 +22,7 @@ export class PlayerProvider implements PlayerProviderServerRemote {
     private remote: ClientRemote<PlayerProviderClientRemote>
 
     @Tunnel()
-    public async update({status}: PlayerProviderUpdateOptions) {
+    public async update({status, customization}: PlayerProviderUpdateOptions) {
         const source = global.source
         const user = this.userSourceStateProvider.getUser(source)
 
@@ -33,7 +33,18 @@ export class PlayerProvider implements PlayerProviderServerRemote {
                 },
                 data: {
                     status: {
-                        update: status
+                        update: status,
+                    },
+                    customization: {
+                        update: {
+                            ...customization,
+                            overlays: JSON.stringify(customization.overlays),
+                            headBlend: JSON.stringify(customization.headBlend),
+                            faceFeatures: JSON.stringify(customization.faceFeatures),
+                            components: JSON.stringify(customization.components),
+                            hairColor: JSON.stringify(customization.hairColor),
+                            props: JSON.stringify(customization.props)
+                        }
                     }
                 }
             })
@@ -45,9 +56,26 @@ export class PlayerProvider implements PlayerProviderServerRemote {
         const user = this.userSourceStateProvider.getUser(source)
 
         if (user) {
-            const status = await this.prismaProvider.characterStatus.findUnique({where: {character_id: user.character.state.id}})
+            const {customization, status} = await this.prismaProvider.characters.findUnique({
+                where: {id: user.character.state.id},
+                select: {
+                    status: true,
+                    customization: true,
+                }
+            })
 
             const coords = [status.positionX, status.positionY, status.positionZ]
+
+            await this.remote.setCustomization(user.state.source, {
+                model: customization.model,
+                eyeColor: customization.eyeColor,
+                overlays: JSON.parse(customization.overlays as string),
+                headBlend: JSON.parse(customization.headBlend as string),
+                faceFeatures: JSON.parse(customization.faceFeatures as string),
+                components: JSON.parse(customization.components as string),
+                hairColor: JSON.parse(customization.hairColor as string),
+                props: JSON.parse(customization.props as string)
+            })
             this.remote._setCoords(user.state.source, coords)
             this.remote._setHeading(user.state.source, status.heading)
             this.remote._setHealth(user.state.source, status.health)

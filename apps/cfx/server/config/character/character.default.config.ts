@@ -28,7 +28,9 @@ const initialCustomization: Omit<Prisma.CharacterCustomizationCreateInput, "char
                 return [255, 1.0, 0, 0, 0];
             }
         })
-    )
+    ),
+    eyeColor: 0,
+    hairColor: JSON.stringify([0, 0])
 }
 
 

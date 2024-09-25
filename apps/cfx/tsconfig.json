@@ -15,7 +15,8 @@
     "types": [
       "reflect-metadata",
       "@types/node",
-      "@citizenfx/server"
+      "@citizenfx/server",
+      "@citizenfx/client"
     ],
     "moduleResolution": "node",
     "resolveJsonModule": true,

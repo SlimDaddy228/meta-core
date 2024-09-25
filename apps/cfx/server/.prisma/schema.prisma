@@ -62,6 +62,8 @@ model CharacterCustomization {
   faceFeatures Json
   headBlend    Json
   overlays     Json
+  hairColor    Json
+  eyeColor     Int
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   character    Characters @relation(fields: [character_id], references: [id], onDelete: Cascade)

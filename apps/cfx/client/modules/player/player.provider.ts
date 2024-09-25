@@ -70,6 +70,16 @@ export class PlayerProvider implements PlayerProviderClientRemote {
         this.ped.armour = armour
     }
 
+    @Tunnel()
+    public getCustomization(): Todo {
+        return this.ped.getCustomization()
+    }
+
+    @Tunnel()
+    public setCustomization(customization: Customization) {
+        return this.ped.setCustomization(customization)
+    }
+
     @OnEvent({eventName: OnSharedEventName.onApplicationStart})
     private onStart() {
         this.ped = Container.get(Ped)
@@ -88,8 +98,10 @@ export class PlayerProvider implements PlayerProviderClientRemote {
                 positionX,
                 positionY,
                 positionZ,
-            }
+            },
+            customization: this.ped.getCustomization()
         })
+
         this.logger.debug("update player data")
     }
 }

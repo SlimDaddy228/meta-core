@@ -11,6 +11,7 @@
     ],
     "types": [
       "@citizenfx/server",
+      "@citizenfx/client",
       "@types/node"
     ],
     "moduleResolution": "node",

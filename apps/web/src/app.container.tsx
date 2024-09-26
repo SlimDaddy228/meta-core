@@ -8,6 +8,8 @@ import {IS_DEVELOPMENT_MODE} from '@utils/envirnoments'
 export const AppContainer = () => {
   useEffect(() => {
     NUI.initListeners()
+    NUI.post({event: 'browser-test'}).then(console.log).catch(console.error)
+    console.log('INIT')
   }, [])
 
   return (

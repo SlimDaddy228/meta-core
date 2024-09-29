@@ -25,7 +25,9 @@ export default defineConfig({
     },
   },
   plugins: [
-    react(),
+    react({
+      jsxImportSource: '@emotion/react',
+    }),
     EnvironmentPlugin('all', {
       prefix: 'VITE_',
     }),

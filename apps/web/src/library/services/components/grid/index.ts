@@ -38,6 +38,8 @@ export class GridComponentService {
 
   private readonly resultCallback: Options['resultCallback']
 
+  private readonly audio: HTMLAudioElement
+
   constructor(options: Options) {
     this.event = options.event
     this.movingItem = options.movingItem
@@ -45,6 +47,8 @@ export class GridComponentService {
     this.columns = options.columns
     this.rows = options.rows
     this.resultCallback = options.resultCallback
+    this.audio = new Audio()
+    this.audio.volume = 0.2
 
     const draggableTarget = this.event.target as HTMLElement
 
@@ -64,6 +68,9 @@ export class GridComponentService {
   }
 
   public start() {
+    this.audio.src = './sounds/grid/gear_generic_pickup.wav'
+    this.audio.play()
+
     const mouseMoveHandler = (event: MouseEvent) => {
       this.mouseMove(event)
     }
@@ -112,12 +119,16 @@ export class GridComponentService {
     const [toX, toY] = [Number(target.dataset.x), Number(target.dataset.y)]
 
     if (Number.isNaN(toX) || Number.isNaN(toY)) {
+      this.audio.src = './sounds/grid/fail.wav'
+      this.audio.play()
       return
     }
 
     const targetPosition = {toX, toY}
 
     if (!this.canDrop(targetPosition)) {
+      this.audio.src = './sounds/grid/fail.wav'
+      this.audio.play()
       return
     }
 
@@ -125,6 +136,9 @@ export class GridComponentService {
       toX,
       toY,
     })
+
+    this.audio.src = './sounds/grid/gear_generic_drop.wav'
+    this.audio.play()
   }
 
   private canDrop(targetPosition: TargetPosition) {

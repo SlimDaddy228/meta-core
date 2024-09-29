@@ -1,5 +1,5 @@
 import {useEffect} from 'react'
-import NUI from '@drivers/index'
+import {NUI} from '@drivers/nui'
 import '@styles/tailwind.scss'
 import '@styles/globals.scss'
 import '@styles/fonts.scss'

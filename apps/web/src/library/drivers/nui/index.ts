@@ -21,7 +21,7 @@ const removeListener = (array: unknown[], function_: FUNC) => {
   }
 }
 
-export default class NUI {
+export class NUI {
   private static events: INuiEvents = {}
 
   private static keysDown: INuiKeysDown = {}

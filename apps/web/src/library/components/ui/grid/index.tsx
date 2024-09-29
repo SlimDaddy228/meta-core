@@ -7,13 +7,19 @@ import React, {
 import {observer} from 'mobx-react-lite'
 import {GridComponentService} from '@library/services/components/grid'
 
-const Grid = styled.div<{columns: number; rows: number}>`
+const Grid = styled.div<{columns: number; rows: number; size: number}>`
   position: absolute;
   right: 30px;
   top: 30px;
   display: grid;
-  grid-template-columns: repeat(${(properties) => properties.columns}, 50px);
-  grid-template-rows: repeat(${(properties) => properties.rows}, 50px);
+  grid-template-columns: repeat(
+    ${(properties) => properties.columns},
+    ${(properties) => properties.size}px
+  );
+  grid-template-rows: repeat(
+    ${(properties) => properties.rows},
+    ${(properties) => properties.size}px
+  );
   background-color: #333;
   padding: 10px;
   width: fit-content;
@@ -22,9 +28,11 @@ const Grid = styled.div<{columns: number; rows: number}>`
   gap: 2px;
 `
 
-const Droppable = styled.div`
-  width: 50px;
-  height: 50px;
+const Droppable = styled.div<{
+  size: number
+}>`
+  width: ${(properties) => properties.size}px;
+  height: ${(properties) => properties.size}px;
   background-color: #777;
   position: relative;
 `
@@ -33,11 +41,13 @@ const Draggable = styled.div<{
   width: number
   height: number
   image: string
+  size: number
 }>`
-  width: ${(properties) => properties.width * 50}px;
-  height: ${(properties) => properties.height * 50}px;
+  width: ${(properties) => properties.width * properties.size}px;
+  height: ${(properties) => properties.height * properties.size}px;
   background-image: url(${(properties) => properties.image});
   background-size: cover;
+  background-position: center;
   cursor: grab;
   position: absolute;
   z-index: 9999;
@@ -48,9 +58,10 @@ const Draggable = styled.div<{
 interface Props {
   columns: number
   rows: number
+  size: number
 }
 
-export const InventoryGrid: FC<Props> = observer(({columns, rows}) => {
+export const InventoryGrid: FC<Props> = observer(({columns, rows, size}) => {
   const [items, setItems] = useState([
     {
       id: 1,
@@ -72,6 +83,28 @@ export const InventoryGrid: FC<Props> = observer(({columns, rows}) => {
       position: {
         x: 1,
         y: 1,
+      },
+    },
+    {
+      id: 3,
+      name: 'Item2',
+      width: 2,
+      height: 6,
+      image: 'https://via.placeholder.com/200x600',
+      position: {
+        x: 2,
+        y: 4,
+      },
+    },
+    {
+      id: 4,
+      name: 'Item2',
+      width: 4,
+      height: 1,
+      image: 'https://via.placeholder.com/100x400',
+      position: {
+        x: 4,
+        y: 5,
       },
     },
   ])
@@ -105,7 +138,7 @@ export const InventoryGrid: FC<Props> = observer(({columns, rows}) => {
   }
 
   return (
-    <Grid columns={columns} rows={rows}>
+    <Grid columns={columns} rows={rows} size={size}>
       {Array.from({length: columns * rows}).map((_, index) => {
         const x = index % 10
         const y = Math.floor(index / 10)
@@ -113,9 +146,10 @@ export const InventoryGrid: FC<Props> = observer(({columns, rows}) => {
           (item) => item.position.x === x && item.position.y === y,
         )
         return (
-          <Droppable key={`${x}-${y}`} data-x={x} data-y={y}>
+          <Droppable key={`${x}-${y}`} data-x={x} data-y={y} size={size}>
             {item && (
               <Draggable
+                size={size}
                 width={item.width}
                 height={item.height}
                 image={item.image}

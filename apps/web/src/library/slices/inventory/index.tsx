@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import React from 'react'
-import {InventoryGrid} from '@library/slices/inventory/grid'
+import {InventoryGrid} from '@library/components/ui/grid'
 
 const Wrapper = styled.div`
   position: absolute;

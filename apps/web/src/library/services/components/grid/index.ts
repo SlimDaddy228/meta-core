@@ -16,7 +16,13 @@ type Options = {
   items: GridItem[]
   columns: number
   rows: number
-  resultCallback: (droppableResult: {toX: number; toY: number}) => void
+  size: number
+  resultCallback: (droppableResult: {
+    toX: number
+    toY: number
+    width: number
+    height: number
+  }) => void
 }
 
 type TargetPosition = {toX: number; toY: number}
@@ -40,6 +46,8 @@ export class GridComponentService {
 
   private readonly audio: HTMLAudioElement
 
+  private readonly size: Options['size']
+
   constructor(options: Options) {
     this.event = options.event
     this.movingItem = options.movingItem
@@ -47,6 +55,8 @@ export class GridComponentService {
     this.columns = options.columns
     this.rows = options.rows
     this.resultCallback = options.resultCallback
+    this.size = options.size
+
     this.audio = new Audio()
     this.audio.volume = 0.2
 
@@ -57,6 +67,7 @@ export class GridComponentService {
     clone.style.position = 'absolute'
     clone.style.pointerEvents = 'none'
     clone.style.left = '-9999px'
+    clone.style.border = '3px solid transparent'
 
     draggableTarget.style.pointerEvents = 'none'
     draggableTarget.style.opacity = '0.5'
@@ -67,6 +78,16 @@ export class GridComponentService {
     this.draggableTarget = draggableTarget
   }
 
+  private _isRotated = false
+
+  public get isRotated(): boolean {
+    return this._isRotated
+  }
+
+  public set isRotated(value: boolean) {
+    this._isRotated = value
+  }
+
   public start() {
     this.audio.src = './sounds/grid/gear_generic_pickup.wav'
     this.audio.play()
@@ -75,14 +96,43 @@ export class GridComponentService {
       this.mouseMove(event)
     }
 
+    const mouseKeyUpHandler = (event: KeyboardEvent) => {
+      if (event.code.toLowerCase() === 'keyr') {
+        this.rotate()
+      }
+    }
+
     const mouseUpHandler = (event: MouseEvent) => {
       this.mouseUp(event)
       document.removeEventListener('mousemove', mouseMoveHandler)
       document.removeEventListener('mouseup', mouseUpHandler)
+      document.removeEventListener('keyup', mouseKeyUpHandler)
     }
 
     document.addEventListener('mousemove', mouseMoveHandler)
     document.addEventListener('mouseup', mouseUpHandler)
+    document.addEventListener('keyup', mouseKeyUpHandler)
+  }
+
+  public getMovingSize() {
+    const height = this.isRotated
+      ? this.movingItem.width
+      : this.movingItem.height
+
+    const width = this.isRotated
+      ? this.movingItem.height
+      : this.movingItem.width
+
+    return {height, width}
+  }
+
+  public rotate(): void {
+    this.isRotated = !this.isRotated
+
+    const {width, height} = this.getMovingSize()
+
+    this.clone.style.width = `${this.size * width}px`
+    this.clone.style.height = `${this.size * height}px`
   }
 
   private mouseMove(event: MouseEvent) {
@@ -101,11 +151,11 @@ export class GridComponentService {
     const [toX, toY] = [Number(target.dataset.x), Number(target.dataset.y)]
 
     if (Number.isNaN(toX) || Number.isNaN(toY)) {
-      this.clone.style.background = 'red'
+      this.clone.style.borderColor = 'red'
       return
     }
 
-    this.clone.style.background = this.canDrop({toX, toY}) ? 'green' : 'red'
+    this.clone.style.borderColor = this.canDrop({toX, toY}) ? 'green' : 'red'
   }
 
   private mouseUp(event: MouseEvent) {
@@ -132,9 +182,13 @@ export class GridComponentService {
       return
     }
 
+    const {width, height} = this.getMovingSize()
+
     this.resultCallback({
       toX,
       toY,
+      width,
+      height,
     })
 
     this.audio.src = './sounds/grid/gear_generic_drop.wav'
@@ -154,8 +208,10 @@ export class GridComponentService {
   }
 
   private isInBoundaries = (targetPosition: TargetPosition) => {
-    const maxX = this.columns - this.movingItem.width
-    const maxY = this.rows - this.movingItem.height
+    const {width, height} = this.getMovingSize()
+
+    const maxX = this.columns - width
+    const maxY = this.rows - height
 
     return !(
       targetPosition.toX < 0 ||
@@ -171,11 +227,13 @@ export class GridComponentService {
         return false // Игнорируем перемещаемый элемент
       }
 
+      const {width, height} = this.getMovingSize()
+
       // Определяем границы предмета, который мы пытаемся переместить
       const itemEndX = item.position.x + item.width
       const itemEndY = item.position.y + item.height
-      const movingEndX = targetPosition.toX + this.movingItem.width
-      const movingEndY = targetPosition.toY + this.movingItem.height
+      const movingEndX = targetPosition.toX + width
+      const movingEndY = targetPosition.toY + height
 
       // Проверка на пересечение
       return (

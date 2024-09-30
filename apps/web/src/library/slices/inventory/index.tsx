@@ -21,7 +21,7 @@ const Wrapper = styled.div`
 export const Inventory = () => {
   return (
     <Wrapper>
-      <InventoryGrid size={50} columns={10} rows={100} gap={2} />
+      <InventoryGrid size={50} columns={10} rows={100} gap={5} />
     </Wrapper>
   )
 }

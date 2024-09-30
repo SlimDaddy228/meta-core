@@ -1,6 +1,10 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, {useEffect} from 'react'
 import {InventoryGrid} from '@library/components/ui/grid'
+import {observer} from 'mobx-react-lite'
+import type {InventoryItem} from '@library/store/inventory'
+import {store} from '@library/store'
+import type {GridServiceResultCallback} from '@library/services/components/grid'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -8,7 +12,7 @@ const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
   backdrop-filter: blur(5px);
-  background: url('https://media.discordapp.net/attachments/1286134080131563552/1289652051147620573/dusty_grunge_style_overlay_texture.png?ex=66fa4251&is=66f8f0d1&hm=e935c3552ece00a09d7ebeaa2acb26700e16a83edffdfce374fde85b9f9a7a1a&=&format=webp&quality=lossless&width=1613&height=905'),
+  background: url('images/inventory/shabby_overlay.png'),
     linear-gradient(
       180deg,
       rgba(26, 27, 30, 0.9) 0%,
@@ -17,11 +21,42 @@ const Wrapper = styled.div`
       rgba(26, 27, 30, 0.9) 100%
     );
 `
+const initialItems: InventoryItem[] = [
+  {
+    id: 1,
+    name: 'Item2',
+    width: 2,
+    height: 6,
+    amount: 1,
+    image: 'https://via.placeholder.com/200x600',
+    position: {
+      x: 0,
+      y: 0,
+    },
+  },
+]
 
-export const Inventory = () => {
+export const Inventory = observer(() => {
+  const items = store.inventory.getItems()
+
+  useEffect(() => {
+    store.inventory.setItems([...initialItems])
+  }, [])
+
+  const resultCallback: GridServiceResultCallback = (options) => {
+    store.inventory.updateItem(options.id, options)
+  }
+
   return (
     <Wrapper>
-      <InventoryGrid size={50} columns={10} rows={100} gap={5} />
+      <InventoryGrid
+        items={items}
+        size={50}
+        columns={10}
+        rows={10}
+        gap={5}
+        resultCallback={resultCallback}
+      />
     </Wrapper>
   )
-}
+})

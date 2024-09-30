@@ -1,28 +1,26 @@
 import type {MouseEvent as ReactMouseEvent} from 'react'
+import type {InventoryItem} from '@library/store/inventory'
 
-export type GridItem = {
-  id: number
-  width: number
-  height: number
-  position: {
-    x: number
-    y: number
-  }
+export type GridServiceResultCallbackArguments = {
+  id: InventoryItem['id']
+  toX: InventoryItem['position']['x']
+  toY: InventoryItem['position']['y']
+  width: InventoryItem['width']
+  height: InventoryItem['height']
 }
+
+export type GridServiceResultCallback = (
+  droppableResult: GridServiceResultCallbackArguments,
+) => void
 
 type Options = {
   event: ReactMouseEvent
-  movingItem: GridItem
-  items: GridItem[]
+  movingItem: InventoryItem
+  items: InventoryItem[]
   columns: number
   rows: number
   size: number
-  resultCallback: (droppableResult: {
-    toX: number
-    toY: number
-    width: number
-    height: number
-  }) => void
+  resultCallback: GridServiceResultCallback
 }
 
 type TargetPosition = {toX: number; toY: number}
@@ -185,6 +183,7 @@ export class GridComponentService {
     const {width, height} = this.getMovingSize()
 
     this.resultCallback({
+      id: this.movingItem.id,
       toX,
       toY,
       width,

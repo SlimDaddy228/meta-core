@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
-import React, {
-  type FC,
-  type MouseEvent as ReactMouseEvent,
-  useState,
-} from 'react'
+import React, {type FC, type MouseEvent as ReactMouseEvent} from 'react'
 import {observer} from 'mobx-react-lite'
-import {GridComponentService} from '@library/services/components/grid'
+import {
+  GridComponentService,
+  type GridServiceResultCallback,
+} from '@library/services/components/grid'
+import type {InventoryItem} from '@library/store/inventory'
 
 const Grid = styled.div<{
   columns: number
@@ -68,60 +68,15 @@ interface Props {
   rows: number
   size: number
   gap: number
+  resultCallback: GridServiceResultCallback
+  items: InventoryItem[]
 }
 
 export const InventoryGrid: FC<Props> = observer(
-  ({columns, rows, size, gap}) => {
-    const [items, setItems] = useState([
-      {
-        id: 1,
-        name: 'Item1',
-        width: 1,
-        height: 1,
-        image: 'https://via.placeholder.com/100x100',
-        position: {
-          x: 0,
-          y: 0,
-        },
-      },
-      {
-        id: 2,
-        name: 'Item2',
-        width: 2,
-        height: 2,
-        image: 'https://via.placeholder.com/200x200',
-        position: {
-          x: 1,
-          y: 1,
-        },
-      },
-      {
-        id: 3,
-        name: 'Item2',
-        width: 2,
-        height: 6,
-        image: 'https://via.placeholder.com/200x600',
-        position: {
-          x: 2,
-          y: 4,
-        },
-      },
-      {
-        id: 4,
-        name: 'Item2',
-        width: 4,
-        height: 1,
-        image: 'https://via.placeholder.com/100x400',
-        position: {
-          x: 4,
-          y: 5,
-        },
-      },
-    ])
-
+  ({columns, rows, size, gap, items, resultCallback}) => {
     const onMouseDown = (
       event: ReactMouseEvent<HTMLDivElement>,
-      movingItem: (typeof items)[number],
+      movingItem: InventoryItem,
     ) => {
       if (event.button !== 0) {
         return
@@ -134,15 +89,7 @@ export const InventoryGrid: FC<Props> = observer(
         columns,
         rows,
         size,
-        resultCallback: ({toX, toY, width, height}) => {
-          setItems((previousState) => {
-            return previousState.map((item) =>
-              item.id === movingItem.id
-                ? {...item, position: {x: toX, y: toY}, width, height}
-                : item,
-            )
-          })
-        },
+        resultCallback,
       })
 
       service.start()

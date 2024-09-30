@@ -21,6 +21,10 @@ body {
                                 supported by Chrome, Edge, Opera and Firefox */
 }
 
+body {
+  overflow: hidden;
+}
+
 .app {
   position: relative;
   width: 100vw;
@@ -29,7 +33,7 @@ body {
   overflow-y: hidden;
 
   &.development {
-    background-image: url("https://cdn.discordapp.com/attachments/1286134080131563552/1288955994269024356/image.png?ex=66fa5d10&is=66f90b90&hm=ad3668c341a19a8320a107dadf79c22a9aeb13b0e817870a181736e93c96cb68&");
+    background-image: url("images/dev/background.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }

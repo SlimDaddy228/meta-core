@@ -36,17 +36,19 @@ model UserIds {
   user_id    Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  user       Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  user Users @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("user_ids")
 }
 
 model Characters {
-  id            Int                     @id @default(autoincrement())
-  user_id       Int
-  createdAt     DateTime                @default(now())
-  updatedAt     DateTime                @updatedAt
-  user          Users                   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
   customization CharacterCustomization?
   status        CharacterStatus?
 
@@ -54,8 +56,8 @@ model Characters {
 }
 
 model CharacterCustomization {
-  id           Int        @id @default(autoincrement())
-  character_id Int        @unique
+  id           Int      @id @default(autoincrement())
+  character_id Int      @unique
   model        Int
   components   Json
   props        Json
@@ -64,25 +66,61 @@ model CharacterCustomization {
   overlays     Json
   hairColor    Json
   eyeColor     Int
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  character    Characters @relation(fields: [character_id], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  character Characters @relation(fields: [character_id], references: [id], onDelete: Cascade)
 
   @@map("character_customization")
 }
 
 model CharacterStatus {
-  id           Int        @id @default(autoincrement())
-  character_id Int        @unique
+  id           Int      @id @default(autoincrement())
+  character_id Int      @unique
   health       Int
   armour       Int
   heading      Float
   positionX    Float
   positionY    Float
   positionZ    Float
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  character    Characters @relation(fields: [character_id], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  character Characters @relation(fields: [character_id], references: [id], onDelete: Cascade)
 
   @@map("character_status")
+}
+
+model Storages {
+  id      Int @id @default(autoincrement())
+  size    Int
+  columns Int
+  rows    Int
+  gap     Int
+
+  @@map("storages")
+}
+
+model StorageItems {
+  id          String @unique
+  name        String
+  description String
+  amount      Int
+  width       Int
+  height      Int
+  positionX   Int
+  positionY   Int
+
+  attributes StorageItemAttributes?
+
+  @@map("storage_items")
+}
+
+model StorageItemAttributes {
+  id    Int    @id @default(autoincrement())
+  name  String
+  value Json
+
+  item    StorageItems @relation(fields: [item_id], references: [id], onDelete: Cascade)
+  item_id String       @unique
 }

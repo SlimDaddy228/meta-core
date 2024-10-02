@@ -132,15 +132,15 @@ exports.Prisma.UsersScalarFieldEnum = {
 exports.Prisma.UserIdsScalarFieldEnum = {
   identifier: 'identifier',
   user_id: 'user_id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  create_at: 'create_at',
+  update_at: 'update_at'
 };
 
 exports.Prisma.CharactersScalarFieldEnum = {
   id: 'id',
   user_id: 'user_id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  create_at: 'create_at',
+  update_at: 'update_at'
 };
 
 exports.Prisma.CharacterCustomizationScalarFieldEnum = {
@@ -171,6 +171,45 @@ exports.Prisma.CharacterStatusScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.StoragesScalarFieldEnum = {
+  id: 'id',
+  size: 'size',
+  columns: 'columns',
+  rows: 'rows',
+  gap: 'gap',
+  character_id: 'character_id'
+};
+
+exports.Prisma.StorageItemNodesScalarFieldEnum = {
+  id: 'id',
+  storage_id: 'storage_id',
+  item_id: 'item_id'
+};
+
+exports.Prisma.StorageItemsScalarFieldEnum = {
+  id: 'id',
+  amount: 'amount',
+  width: 'width',
+  height: 'height',
+  positionX: 'positionX',
+  positionY: 'positionY',
+  storage_id: 'storage_id',
+  directory_item_id: 'directory_item_id'
+};
+
+exports.Prisma.DirectoryItemsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description'
+};
+
+exports.Prisma.DirectoryItemAttributesScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  value: 'value',
+  item_id: 'item_id'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -197,7 +236,12 @@ exports.Prisma.ModelName = {
   UserIds: 'UserIds',
   Characters: 'Characters',
   CharacterCustomization: 'CharacterCustomization',
-  CharacterStatus: 'CharacterStatus'
+  CharacterStatus: 'CharacterStatus',
+  Storages: 'Storages',
+  StorageItemNodes: 'StorageItemNodes',
+  StorageItems: 'StorageItems',
+  DirectoryItems: 'DirectoryItems',
+  DirectoryItemAttributes: 'DirectoryItemAttributes'
 };
 
 /**

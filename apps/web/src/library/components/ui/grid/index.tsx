@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
-import React, {type FC, type MouseEvent as ReactMouseEvent} from 'react'
+import React, {type FC, memo, type MouseEvent as ReactMouseEvent} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   GridComponentService,
   type GridServiceResultCallback,
 } from '@library/services/components/grid'
-import type {InventoryItem} from '@library/store/inventory'
+import type {InventoryItem} from '@library/slices/inventory'
 
 const Grid = styled.div<{
   columns: number
@@ -33,14 +33,14 @@ const Grid = styled.div<{
   gap: ${(properties) => properties.gap}px;
 `
 
-const Droppable = styled.div<{
+const Droppable = memo(styled.div<{
   size: number
 }>`
   width: ${(properties) => properties.size}px;
   height: ${(properties) => properties.size}px;
   background-color: #777;
   position: relative;
-`
+`)
 
 const Draggable = styled.div<{
   width: number
@@ -101,7 +101,7 @@ export const InventoryGrid: FC<Props> = observer(
           const x = index % 10
           const y = Math.floor(index / 10)
           const item = items.find(
-            (item) => item.position.x === x && item.position.y === y,
+            (item) => item.positionX === x && item.positionY === y,
           )
           return (
             <Droppable key={`${x}-${y}`} data-x={x} data-y={y} size={size}>
@@ -110,7 +110,7 @@ export const InventoryGrid: FC<Props> = observer(
                   size={size}
                   width={item.width}
                   height={item.height}
-                  image={item.image}
+                  image="https://via.placeholder.com/200x200"
                   gap={gap}
                   onMouseDown={(event) => onMouseDown(event, item)}
                 />

@@ -1,18 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import type {GridServiceResultCallbackArguments} from '@library/services/components/grid'
-
-export interface InventoryItem {
-  id: number
-  name: string
-  width: number
-  height: number
-  image: string
-  position: {
-    x: number
-    y: number
-  }
-  amount: number
-}
+import type {InventoryItem} from '@library/slices/inventory'
 
 export class CInventory {
   private _items: InventoryItem[] = []
@@ -37,14 +25,15 @@ export class CInventory {
     const findItem = this._items[findIndex]
 
     if (findItem) {
-      const updateFields = {
+      const updateFields: Pick<
+        InventoryItem,
+        'id' | 'width' | 'height' | 'positionX' | 'positionY'
+      > = {
         id: options.id,
         width: options.width,
         height: options.height,
-        position: {
-          x: options.toX,
-          y: options.toY,
-        },
+        positionX: options.toX,
+        positionY: options.toY,
       }
       this._items[findIndex] = {...findItem, ...updateFields}
     }

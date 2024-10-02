@@ -1,10 +1,10 @@
 import type {MouseEvent as ReactMouseEvent} from 'react'
-import type {InventoryItem} from '@library/store/inventory'
+import type {InventoryItem} from '@library/slices/inventory'
 
 export type GridServiceResultCallbackArguments = {
   id: InventoryItem['id']
-  toX: InventoryItem['position']['x']
-  toY: InventoryItem['position']['y']
+  toX: InventoryItem['positionX']
+  toY: InventoryItem['positionY']
   width: InventoryItem['width']
   height: InventoryItem['height']
 }
@@ -229,17 +229,17 @@ export class GridComponentService {
       const {width, height} = this.getMovingSize()
 
       // Определяем границы предмета, который мы пытаемся переместить
-      const itemEndX = item.position.x + item.width
-      const itemEndY = item.position.y + item.height
+      const itemEndX = item.positionX + item.width
+      const itemEndY = item.positionY + item.height
       const movingEndX = targetPosition.toX + width
       const movingEndY = targetPosition.toY + height
 
       // Проверка на пересечение
       return (
         targetPosition.toX < itemEndX &&
-        movingEndX > item.position.x &&
+        movingEndX > item.positionX &&
         targetPosition.toY < itemEndY &&
-        movingEndY > item.position.y
+        movingEndY > item.positionY
       )
     })
   }

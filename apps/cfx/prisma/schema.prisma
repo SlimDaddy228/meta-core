@@ -34,8 +34,8 @@ model Users {
 model UserIds {
   identifier String   @id @db.VarChar(100)
   user_id    Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  create_at  DateTime @default(now())
+  update_at  DateTime @updatedAt
 
   user Users @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
@@ -45,12 +45,13 @@ model UserIds {
 model Characters {
   id        Int      @id @default(autoincrement())
   user_id   Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  create_at DateTime @default(now())
+  update_at DateTime @updatedAt
   user      Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   customization CharacterCustomization?
   status        CharacterStatus?
+  storage       Storages?
 
   @@map("characters")
 }
@@ -98,29 +99,64 @@ model Storages {
   rows    Int
   gap     Int
 
+  character    Characters? @relation(fields: [character_id], references: [id], onDelete: Cascade)
+  character_id Int?        @unique
+
+  items        StorageItems[]
+  storage_node StorageItemNodes?
+
   @@map("storages")
 }
 
-model StorageItems {
-  id          String @unique
-  name        String
-  description String
-  amount      Int
-  width       Int
-  height      Int
-  positionX   Int
-  positionY   Int
+model StorageItemNodes {
+  id Int @id @default(autoincrement())
 
-  attributes StorageItemAttributes?
+  storage    Storages @relation(fields: [storage_id], references: [id], onDelete: Cascade)
+  storage_id Int      @unique
+
+  items   StorageItems? @relation(fields: [item_id], references: [id], onDelete: Cascade)
+  item_id Int
+
+  @@map("storage_nodes")
+}
+
+model StorageItems {
+  id        Int @id @default(autoincrement())
+  amount    Int
+  width     Int
+  height    Int
+  positionX Int
+  positionY Int
+
+  storage    Storages? @relation(fields: [storage_id], references: [id], onDelete: Cascade)
+  storage_id Int
+
+  directory_item    DirectoryItems? @relation(fields: [directory_item_id], references: [id], onDelete: Cascade)
+  directory_item_id String
+
+  storage_node StorageItemNodes[]
 
   @@map("storage_items")
 }
 
-model StorageItemAttributes {
+model DirectoryItems {
+  id          String @id @unique
+  name        String
+  description String
+
+  attributes    DirectoryItemAttributes[]
+  storage_items StorageItems[]
+
+  @@map("directory_items")
+}
+
+model DirectoryItemAttributes {
   id    Int    @id @default(autoincrement())
   name  String
   value Json
 
-  item    StorageItems @relation(fields: [item_id], references: [id], onDelete: Cascade)
-  item_id String       @unique
+  item    DirectoryItems @relation(fields: [item_id], references: [id], onDelete: Cascade)
+  item_id String
+
+  @@map("directory_item_attributes")
 }

@@ -5,10 +5,12 @@ import {
   GridComponentsService,
   type GridDropCallback,
 } from '@library/services/components/grid'
+import {observer} from 'mobx-react-lite'
 import type {GridContainers} from './lib/types'
 
 const Container = styled.div`
   width: fit-content;
+  margin-bottom: 200px;
 `
 
 const Storage = styled.div<{
@@ -71,7 +73,7 @@ interface Props {
   containers: GridContainers
 }
 
-export const Grid: FC<Props> = ({containers, drop, canDrop}) => {
+export const Grid: FC<Props> = observer(({containers, drop, canDrop}) => {
   const onDragStart = (event: MouseEvent) => {
     if (event.button === LEFT_MOUSE_BUTTON_CODE) {
       const service = new GridComponentsService({event, drop, canDrop})
@@ -123,4 +125,4 @@ export const Grid: FC<Props> = ({containers, drop, canDrop}) => {
       ))}
     </Container>
   ))
-}
+})

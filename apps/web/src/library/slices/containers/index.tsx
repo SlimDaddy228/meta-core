@@ -31,6 +31,14 @@ const initContainers: GridContainers = {
       id: 1,
       size: 50,
       columns: 5,
+      rows: 1,
+      gap: 2,
+      items: [],
+    },
+    {
+      id: 2,
+      size: 50,
+      columns: 5,
       rows: 5,
       gap: 2,
       items: [
@@ -44,15 +52,46 @@ const initContainers: GridContainers = {
           },
           storage_nodes: [],
         },
+        {
+          id: 2,
+          width: 1,
+          height: 4,
+          position: {
+            x: 0,
+            y: 0,
+          },
+          storage_nodes: [],
+        },
       ],
     },
     {
-      id: 2,
+      id: 3,
+      size: 50,
+      columns: 5,
+      rows: 1,
+      gap: 2,
+      items: [],
+    },
+  ],
+  2: [
+    {
+      id: 3,
       size: 50,
       columns: 5,
       rows: 5,
       gap: 2,
-      items: [],
+      items: [
+        {
+          id: 100,
+          width: 1,
+          height: 1,
+          position: {
+            x: 1,
+            y: 1,
+          },
+          storage_nodes: [],
+        },
+      ],
     },
   ],
 }

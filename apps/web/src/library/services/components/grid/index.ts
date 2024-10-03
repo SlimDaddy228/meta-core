@@ -2,6 +2,8 @@ import {type MouseEvent as ReactMouseEvent} from 'react'
 
 export type GridCallbackOptions = {
   draggableId: number
+  fromStorageId: number
+  fromContainerId: number
   toStorageId: number
   toContainerId: number
   toX: number
@@ -125,38 +127,55 @@ export class GridComponentsService {
     const [toX, toY] = [Number(positionX), Number(positionY)]
 
     if (Number.isNaN(toX) || Number.isNaN(toY)) {
-      console.error('not find toX or toY')
       return null
     }
 
     const droppableStorageTarget = droppableTarget.parentNode as HTMLElement
-    const {storageId} = droppableStorageTarget.dataset
-    const [toStorageId] = [Number(storageId)]
+    const toStorageId = Number(droppableStorageTarget.dataset.storageId)
 
     if (Number.isNaN(toStorageId)) {
-      console.error('not find toStorageId')
       return null
     }
 
     const droppableContainerTarget =
       droppableStorageTarget.parentNode as HTMLElement
-    const {containerId} = droppableContainerTarget.dataset
-    const [toContainerId] = [Number(containerId)]
+    const toContainerId = Number(droppableContainerTarget.dataset.containerId)
 
     if (Number.isNaN(toContainerId)) {
-      console.error('not find toContainerId')
       return null
     }
 
     const draggableId = Number(this.draggableTarget.dataset.draggableId)
 
     if (Number.isNaN(draggableId)) {
-      console.error('not find draggableId')
+      return null
+    }
+
+    const draggableStorageTarget = this.draggableTarget.parentNode
+      ?.parentNode as HTMLElement
+
+    if (!draggableStorageTarget) {
+      return null
+    }
+
+    const fromStorageId = Number(draggableStorageTarget.dataset.storageId)
+
+    if (Number.isNaN(fromStorageId)) {
+      return null
+    }
+
+    const draggableContainerTarget =
+      draggableStorageTarget.parentNode as HTMLElement
+    const fromContainerId = Number(draggableContainerTarget.dataset.containerId)
+
+    if (Number.isNaN(fromContainerId)) {
       return null
     }
 
     return {
       draggableId,
+      fromContainerId,
+      fromStorageId,
       toStorageId,
       toContainerId,
       toX,

@@ -1,95 +1,43 @@
-import type {MouseEvent as ReactMouseEvent} from 'react'
-import type {InventoryItem} from '@library/slices/inventory'
+import {type MouseEvent as ReactMouseEvent} from 'react'
 
-export type GridServiceResultCallbackArguments = {
-  id: InventoryItem['id']
-  toX: InventoryItem['positionX']
-  toY: InventoryItem['positionY']
-  width: InventoryItem['width']
-  height: InventoryItem['height']
+export type GridCallbackOptions = {
+  draggableId: number
+  toStorageId: number
+  toContainerId: number
+  toX: number
+  toY: number
 }
 
-export type GridServiceResultCallback = (
-  droppableResult: GridServiceResultCallbackArguments,
-) => void
+export type GridCanDropCallback = (options: GridCallbackOptions) => boolean
+export type GridDropCallback = (options: GridCallbackOptions) => void
 
 type Options = {
   event: ReactMouseEvent
-  movingItem: InventoryItem
-  items: InventoryItem[]
-  columns: number
-  rows: number
-  size: number
-  resultCallback: GridServiceResultCallback
+  canDrop: GridCanDropCallback
+  drop: GridDropCallback
 }
 
-type TargetPosition = {toX: number; toY: number}
-
-export class GridComponentService {
+export class GridComponentsService {
   private readonly event: Options['event']
 
-  private readonly movingItem: Options['movingItem']
+  private readonly canDrop: Options['canDrop']
 
-  private readonly items: Options['items']
+  private readonly drop: Options['drop']
 
-  private readonly columns: Options['columns']
-
-  private readonly rows: Options['rows']
-
-  private readonly clone: HTMLElement
+  private readonly draggableClone: HTMLElement
 
   private readonly draggableTarget: HTMLElement
 
-  private readonly resultCallback: Options['resultCallback']
-
-  private readonly audio: HTMLAudioElement
-
-  private readonly size: Options['size']
-
   constructor(options: Options) {
     this.event = options.event
-    this.movingItem = options.movingItem
-    this.items = options.items
-    this.columns = options.columns
-    this.rows = options.rows
-    this.resultCallback = options.resultCallback
-    this.size = options.size
+    this.canDrop = options.canDrop
+    this.drop = options.drop
 
-    this.audio = new Audio()
-    this.audio.volume = 0.2
-
-    const draggableTarget = this.event.target as HTMLElement
-
-    const clone = draggableTarget.cloneNode(true) as HTMLElement
-
-    clone.style.position = 'absolute'
-    clone.style.pointerEvents = 'none'
-    clone.style.left = '-9999px'
-    clone.style.border = '3px solid transparent'
-
-    draggableTarget.style.pointerEvents = 'none'
-    draggableTarget.style.opacity = '0.5'
-
-    document.body.append(clone)
-
-    this.clone = clone
-    this.draggableTarget = draggableTarget
-  }
-
-  private _isRotated = false
-
-  public get isRotated(): boolean {
-    return this._isRotated
-  }
-
-  public set isRotated(value: boolean) {
-    this._isRotated = value
+    this.draggableTarget = this.event.target as HTMLElement
+    this.draggableClone = this.createDraggableClone()
   }
 
   public start() {
-    this.audio.src = './sounds/grid/gear_generic_pickup.wav'
-    this.audio.play()
-
     const mouseMoveHandler = (event: MouseEvent) => {
       this.mouseMove(event)
     }
@@ -112,135 +60,107 @@ export class GridComponentService {
     document.addEventListener('keyup', mouseKeyUpHandler)
   }
 
-  public getMovingSize() {
-    const height = this.isRotated
-      ? this.movingItem.width
-      : this.movingItem.height
+  private rotate(): void {}
 
-    const width = this.isRotated
-      ? this.movingItem.height
-      : this.movingItem.width
+  private createDraggableClone(): HTMLElement {
+    const clone = this.draggableTarget.cloneNode(true) as HTMLElement
 
-    return {height, width}
-  }
+    clone.style.position = 'absolute'
+    clone.style.pointerEvents = 'none'
+    clone.style.left = '-9999px'
+    clone.style.border = '3px solid transparent'
 
-  public rotate(): void {
-    this.isRotated = !this.isRotated
+    this.draggableTarget.style.pointerEvents = 'none'
+    this.draggableTarget.style.opacity = '0.5'
 
-    const {width, height} = this.getMovingSize()
+    document.body.append(clone)
 
-    this.clone.style.width = `${this.size * width}px`
-    this.clone.style.height = `${this.size * height}px`
+    return clone
   }
 
   private mouseMove(event: MouseEvent) {
     const {pageX, pageY} = event
 
     if (pageX > 0 && pageX < window.innerWidth) {
-      this.clone.style.left = `${pageX}px`
+      this.draggableClone.style.left = `${pageX}px`
     }
 
     if (pageY > 0 && pageY < window.innerHeight) {
-      this.clone.style.top = `${pageY}px`
+      this.draggableClone.style.top = `${pageY}px`
     }
 
-    const target = event.target as HTMLElement
+    const options = this.parseOptions(event)
 
-    const [toX, toY] = [Number(target.dataset.x), Number(target.dataset.y)]
-
-    if (Number.isNaN(toX) || Number.isNaN(toY)) {
-      this.clone.style.borderColor = 'red'
+    if (!options) {
+      this.draggableClone.style.borderColor = 'red'
       return
     }
 
-    this.clone.style.borderColor = this.canDrop({toX, toY}) ? 'green' : 'red'
+    this.draggableClone.style.borderColor = this.canDrop(options)
+      ? 'green'
+      : 'red'
   }
 
   private mouseUp(event: MouseEvent) {
-    this.clone.remove()
-
-    this.draggableTarget.style.pointerEvents = 'unset'
+    this.draggableClone.remove()
+    this.draggableTarget.style.pointerEvents = 'all'
     this.draggableTarget.style.opacity = '1.0'
 
-    const target = event.target as HTMLElement
+    const options = this.parseOptions(event)
 
-    const [toX, toY] = [Number(target.dataset.x), Number(target.dataset.y)]
+    if (!options) {
+      return
+    }
+
+    if (!this.canDrop(options)) {
+      return
+    }
+
+    this.drop(options)
+  }
+
+  private parseOptions(event: MouseEvent): GridCallbackOptions | null {
+    const droppableTarget = event.target as HTMLElement
+    const {positionX, positionY} = droppableTarget.dataset
+    const [toX, toY] = [Number(positionX), Number(positionY)]
 
     if (Number.isNaN(toX) || Number.isNaN(toY)) {
-      this.audio.src = './sounds/grid/fail.wav'
-      this.audio.play()
-      return
+      console.error('not find toX or toY')
+      return null
     }
 
-    const targetPosition = {toX, toY}
+    const droppableStorageTarget = droppableTarget.parentNode as HTMLElement
+    const {storageId} = droppableStorageTarget.dataset
+    const [toStorageId] = [Number(storageId)]
 
-    if (!this.canDrop(targetPosition)) {
-      this.audio.src = './sounds/grid/fail.wav'
-      this.audio.play()
-      return
+    if (Number.isNaN(toStorageId)) {
+      console.error('not find toStorageId')
+      return null
     }
 
-    const {width, height} = this.getMovingSize()
+    const droppableContainerTarget =
+      droppableStorageTarget.parentNode as HTMLElement
+    const {containerId} = droppableContainerTarget.dataset
+    const [toContainerId] = [Number(containerId)]
 
-    this.resultCallback({
-      id: this.movingItem.id,
+    if (Number.isNaN(toContainerId)) {
+      console.error('not find toContainerId')
+      return null
+    }
+
+    const draggableId = Number(this.draggableTarget.dataset.draggableId)
+
+    if (Number.isNaN(draggableId)) {
+      console.error('not find draggableId')
+      return null
+    }
+
+    return {
+      draggableId,
+      toStorageId,
+      toContainerId,
       toX,
       toY,
-      width,
-      height,
-    })
-
-    this.audio.src = './sounds/grid/gear_generic_drop.wav'
-    this.audio.play()
-  }
-
-  private canDrop(targetPosition: TargetPosition) {
-    if (this.isOverlapping(targetPosition)) {
-      return false
     }
-
-    if (!this.isInBoundaries(targetPosition)) {
-      return false
-    }
-
-    return true
-  }
-
-  private isInBoundaries = (targetPosition: TargetPosition) => {
-    const {width, height} = this.getMovingSize()
-
-    const maxX = this.columns - width
-    const maxY = this.rows - height
-
-    return !(
-      targetPosition.toX < 0 ||
-      targetPosition.toY < 0 ||
-      targetPosition.toX > maxX ||
-      targetPosition.toY > maxY
-    )
-  }
-
-  private isOverlapping = (targetPosition: TargetPosition) => {
-    return this.items.some((item) => {
-      if (item.id === this.movingItem.id) {
-        return false // Игнорируем перемещаемый элемент
-      }
-
-      const {width, height} = this.getMovingSize()
-
-      // Определяем границы предмета, который мы пытаемся переместить
-      const itemEndX = item.positionX + item.width
-      const itemEndY = item.positionY + item.height
-      const movingEndX = targetPosition.toX + width
-      const movingEndY = targetPosition.toY + height
-
-      // Проверка на пересечение
-      return (
-        targetPosition.toX < itemEndX &&
-        movingEndX > item.positionX &&
-        targetPosition.toY < itemEndY &&
-        movingEndY > item.positionY
-      )
-    })
   }
 }

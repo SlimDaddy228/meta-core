@@ -1,5 +1,5 @@
-import {CInventory} from '@library/store/inventory'
+import {CContainers} from '@library/store/containers'
 
 export const store = {
-  inventory: new CInventory(),
+  containers: new CContainers(),
 }

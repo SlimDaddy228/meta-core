@@ -5,7 +5,7 @@ import '@styles/globals.scss'
 import '@styles/fonts.scss'
 import {Menu} from '@library/slices/menu'
 import {IS_DEVELOPMENT_MODE} from '@utils/envirnoments'
-import {Inventory} from '@library/slices/inventory'
+import {Containers} from '@library/slices/containers'
 
 export const AppContainer = () => {
   useEffect(() => {
@@ -15,7 +15,7 @@ export const AppContainer = () => {
   return (
     <div className={`app ${IS_DEVELOPMENT_MODE ? 'development' : ''}`}>
       <Menu />
-      <Inventory />
+      <Containers />
     </div>
   )
 }

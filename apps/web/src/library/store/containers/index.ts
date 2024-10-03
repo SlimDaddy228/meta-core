@@ -18,14 +18,68 @@ export class CContainers {
   }
 
   public canDrop(options: GridCallbackOptions): boolean {
-    return true
+    return this.isInBoundaries(options) && !this.isOverlapping(options)
   }
 
   public drop(options: GridCallbackOptions): void {
+    const to = this.getTo(options)
+    const from = this.getFrom(options)
+
+    if (!to || !from) {
+      return
+    }
+
+    const itemIndex = from.storage.items.findIndex(
+      (item) => item.id === options.draggableId,
+    )
+
+    if (itemIndex === -1) {
+      return
+    }
+
+    const draggableItem = from.storage.items[itemIndex]
+
+    if (
+      draggableItem.position.x === options.toX &&
+      draggableItem.position.y === options.toY &&
+      from.storage.id === to.storage.id
+    ) {
+      return
+    }
+
+    const clonePreviousItem = {...draggableItem}
+    clonePreviousItem.position.x = options.toX
+    clonePreviousItem.position.y = options.toY
+    to.storage.items.push(clonePreviousItem)
+    from.storage.items.splice(itemIndex, 1)
+  }
+
+  private getFrom(
+    options: Pick<GridCallbackOptions, 'fromContainerId' | 'fromStorageId'>,
+  ) {
+    const container = this._containers[options.fromContainerId]
+
+    if (!container) {
+      return null
+    }
+
+    const storage = container.find(
+      (storage) => storage.id === options.fromStorageId,
+    )
+    if (!storage) {
+      return null
+    }
+
+    return {container, storage}
+  }
+
+  private getTo(
+    options: Pick<GridCallbackOptions, 'toContainerId' | 'toStorageId'>,
+  ) {
     const container = this._containers[options.toContainerId]
 
     if (!container) {
-      return
+      return null
     }
 
     const storage = container.find(
@@ -33,80 +87,71 @@ export class CContainers {
     )
 
     if (!storage) {
-      return
+      return null
     }
 
-    const isMoveToAnotherContainer =
-      options.fromContainerId !== options.toContainerId
+    return {container, storage}
+  }
 
-    if (isMoveToAnotherContainer) {
-      const previousContainer = this._containers[options.fromContainerId]
+  private isInBoundaries = (options: GridCallbackOptions): boolean => {
+    const to = this.getTo(options)
+    const from = this.getFrom(options)
 
-      if (!previousContainer) {
-        return
-      }
-
-      const previousStorage = previousContainer.find(
-        (storage) => storage.id === options.fromStorageId,
-      )
-
-      if (!previousStorage) {
-        return
-      }
-
-      const itemIndex = previousStorage.items.findIndex(
-        (item) => item.id === options.draggableId,
-      )
-
-      if (itemIndex === -1) {
-        return
-      }
-
-      const clonePreviousItem = {...previousStorage.items[itemIndex]}
-      clonePreviousItem.position.x = options.toX
-      clonePreviousItem.position.y = options.toY
-      storage.items.push(clonePreviousItem)
-      previousStorage.items.splice(itemIndex, 1)
-      return
+    if (!from || !to) {
+      return false
     }
 
-    const isMoveToAnotherStorage = options.fromStorageId !== options.toStorageId
-
-    if (isMoveToAnotherStorage) {
-      const previousStorage = container.find(
-        (storage) => storage.id === options.fromStorageId,
-      )
-
-      if (!previousStorage) {
-        return
-      }
-
-      const itemIndex = previousStorage.items.findIndex(
-        (item) => item.id === options.draggableId,
-      )
-
-      if (itemIndex === -1) {
-        return
-      }
-
-      const clonePreviousItem = {...previousStorage.items[itemIndex]}
-      clonePreviousItem.position.x = options.toX
-      clonePreviousItem.position.y = options.toY
-
-      storage.items.push(clonePreviousItem)
-      previousStorage.items.splice(itemIndex, 1)
-      return
-    }
-
-    const findItemIndex = storage.items.findIndex(
+    const draggableItem = from.storage.items.find(
       (item) => item.id === options.draggableId,
     )
 
-    if (findItemIndex === -1) {
-      return
+    if (!draggableItem) {
+      return false
     }
 
-    storage.items[findItemIndex].position.x = options.toX
-    storage.items[findItemIndex].position.y = options.toY
+    const maxX = to.storage.columns - draggableItem.width
+    const maxY = to.storage.rows - draggableItem.height
+
+    return !(
+      options.toX < 0 ||
+      options.toY < 0 ||
+      options.toX > maxX ||
+      options.toY > maxY
+    )
+  }
+
+  private isOverlapping = (options: GridCallbackOptions) => {
+    const to = this.getTo(options)
+    const from = this.getFrom(options)
+
+    if (!from || !to) {
+      return true
+    }
+
+    const draggableItem = from.storage.items.find(
+      (item) => item.id === options.draggableId,
+    )
+
+    if (!draggableItem) {
+      return true
+    }
+
+    return to.storage.items.some((item) => {
+      if (item.id === draggableItem.id) {
+        return false
+      }
+
+      const itemEndX = item.position.x + item.width
+      const itemEndY = item.position.y + item.height
+      const movingEndX = options.toX + draggableItem.width
+      const movingEndY = options.toY + draggableItem.height
+
+      return (
+        options.toX < itemEndX &&
+        movingEndX > item.position.x &&
+        options.toY < itemEndY &&
+        movingEndY > item.position.y
+      )
+    })
   }
 }

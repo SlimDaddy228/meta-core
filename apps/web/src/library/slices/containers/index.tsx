@@ -25,7 +25,16 @@ const Wrapper = styled.div`
       rgba(26, 27, 30, 0.9) 100%
     );
 `
-const initContainers: GridContainers = {
+
+const Inventory = styled(Grid)`
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  max-height: 90vh;
+  overflow: auto;
+`
+
+const mainInventory: GridContainers = {
   1: [
     {
       id: 1,
@@ -54,8 +63,8 @@ const initContainers: GridContainers = {
         },
         {
           id: 2,
-          width: 1,
-          height: 4,
+          width: 4,
+          height: 1,
           position: {
             x: 0,
             y: 0,
@@ -73,12 +82,15 @@ const initContainers: GridContainers = {
       items: [],
     },
   ],
+}
+
+const bag = {
   2: [
     {
-      id: 3,
+      id: 4,
       size: 50,
-      columns: 5,
-      rows: 5,
+      columns: 10,
+      rows: 100,
       gap: 2,
       items: [
         {
@@ -100,7 +112,7 @@ export const Containers = observer(() => {
   const containers = store.containers.getContainers()
 
   useEffect(() => {
-    store.containers.setContainers(initContainers)
+    store.containers.setContainers({...mainInventory, ...bag})
   }, [])
 
   const canDrop: GridCanDropCallback = (options: GridCallbackOptions) => {
@@ -111,9 +123,24 @@ export const Containers = observer(() => {
     store.containers.drop(options)
   }
 
+  if (!containers[1] || !containers[2]) {
+    return null
+  }
+
   return (
     <Wrapper>
-      <Grid containers={containers} canDrop={canDrop} drop={drop} />
+      <Grid
+        containerId={1}
+        storages={containers[1]}
+        canDrop={canDrop}
+        drop={drop}
+      />
+      <Inventory
+        containerId={2}
+        storages={containers[2]}
+        canDrop={canDrop}
+        drop={drop}
+      />
     </Wrapper>
   )
 })

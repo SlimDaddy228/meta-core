@@ -1,4 +1,4 @@
-import React, {type FC, memo, type MouseEvent} from 'react'
+import React, {type FC, Fragment, memo, type MouseEvent} from 'react'
 import styled from '@emotion/styled'
 import {
   type GridCanDropCallback,
@@ -6,11 +6,10 @@ import {
   type GridDropCallback,
 } from '@library/services/components/grid'
 import {observer} from 'mobx-react-lite'
-import type {GridContainers} from './lib/types'
+import type {GridContainerId, GridStorage} from './lib/types'
 
 const Container = styled.div`
   width: fit-content;
-  margin-bottom: 200px;
 `
 
 const Storage = styled.div<{
@@ -68,61 +67,73 @@ const Draggable = styled.div<{
 const LEFT_MOUSE_BUTTON_CODE = 0
 
 interface Props {
+  className?: string
+  containerId: GridContainerId
   canDrop: GridCanDropCallback
   drop: GridDropCallback
-  containers: GridContainers
+  storages: GridStorage[]
 }
 
-export const Grid: FC<Props> = observer(({containers, drop, canDrop}) => {
-  const onDragStart = (event: MouseEvent) => {
-    if (event.button === LEFT_MOUSE_BUTTON_CODE) {
-      const service = new GridComponentsService({event, drop, canDrop})
-      service.start()
+export const Grid: FC<Props> = observer(
+  ({className, containerId, storages, drop, canDrop}) => {
+    const onDragStart = (event: MouseEvent) => {
+      if (event.button === LEFT_MOUSE_BUTTON_CODE) {
+        const service = new GridComponentsService({event, drop, canDrop})
+        service.start()
+      }
     }
-  }
 
-  return Object.entries(containers).map(([containerId, storages]) => (
-    <Container key={containerId} data-container-id={containerId}>
-      {storages.map((storage) => (
-        <Storage
-          key={storage.id}
-          data-storage-id={storage.id}
-          size={storage.size}
-          gap={storage.gap}
-          rows={storage.rows}
-          columns={storage.columns}
-        >
-          {Array.from({length: storage.columns * storage.rows}).map(
-            (_, index) => {
-              const x = index % 10
-              const y = Math.floor(index / 10)
-              const item = storage.items.find(
-                (item) => item.position.x === x && item.position.y === y,
-              )
-              return (
-                <Droppable
-                  key={[containerId, storage.id, x, y].join(':')}
-                  data-position-x={x}
-                  data-position-y={y}
-                  size={storage.size}
-                >
-                  {item && (
-                    <Draggable
-                      data-draggable-id={item.id}
+    return (
+      <Container
+        key={containerId}
+        className={className}
+        data-container-id={containerId}
+      >
+        <span>{`ContainerId: ${containerId}`}</span>
+        {storages.map((storage) => (
+          <Fragment key={storage.id}>
+            <br />
+            <span>{`StorageId: ${storage.id}`}</span>
+            <Storage
+              data-storage-id={storage.id}
+              size={storage.size}
+              gap={storage.gap}
+              rows={storage.rows}
+              columns={storage.columns}
+            >
+              {Array.from({length: storage.columns * storage.rows}).map(
+                (_, index) => {
+                  const x = index % storage.columns
+                  const y = Math.floor(index / storage.columns)
+                  const item = storage.items.find(
+                    (item) => item.position.x === x && item.position.y === y,
+                  )
+                  return (
+                    <Droppable
+                      key={[containerId, storage.id, x, y].join(':')}
+                      data-position-x={x}
+                      data-position-y={y}
                       size={storage.size}
-                      width={item.width}
-                      height={item.height}
-                      image="https://via.placeholder.com/200x200"
-                      gap={storage.gap}
-                      onMouseDown={onDragStart}
-                    />
-                  )}
-                </Droppable>
-              )
-            },
-          )}
-        </Storage>
-      ))}
-    </Container>
-  ))
-})
+                    >
+                      {item && (
+                        <Draggable
+                          data-draggable-id={item.id}
+                          size={storage.size}
+                          width={item.width}
+                          height={item.height}
+                          image="https://via.placeholder.com/200x200"
+                          gap={storage.gap}
+                          onMouseDown={onDragStart}
+                        />
+                      )}
+                    </Droppable>
+                  )
+                },
+              )}
+            </Storage>
+          </Fragment>
+        ))}
+      </Container>
+    )
+  },
+)

@@ -24,6 +24,6 @@ export type GridStorage = {
   items: GridItem[]
 }
 
-export type ContainerId = number
+export type GridContainerId = number
 
-export type GridContainers = Record<ContainerId, GridStorage[]>
+export type GridContainers = Record<GridContainerId, GridStorage[]>

@@ -8,6 +8,7 @@ import type {
   GridCallbackOptions,
   GridCanDropCallback,
   GridDropCallback,
+  GridOnDraggableDoubleClick,
 } from '@library/services/components/grid'
 
 const Wrapper = styled.div`
@@ -84,7 +85,7 @@ const mainInventory: GridContainers = {
   ],
 }
 
-const bag = {
+const bag: GridContainers = {
   2: [
     {
       id: 4,
@@ -101,7 +102,13 @@ const bag = {
             x: 1,
             y: 1,
           },
-          storage_nodes: [],
+          storage_nodes: [
+            {
+              id: 1,
+              itemId: 100,
+              storageId: 1,
+            },
+          ],
         },
       ],
     },
@@ -123,6 +130,10 @@ export const Containers = observer(() => {
     store.containers.drop(options)
   }
 
+  const onDraggableDoubleClick: GridOnDraggableDoubleClick = (event, item) => {
+    store.containers.openItemContainer(event, item)
+  }
+
   if (!containers[1] || !containers[2]) {
     return null
   }
@@ -134,12 +145,14 @@ export const Containers = observer(() => {
         storages={containers[1]}
         canDrop={canDrop}
         drop={drop}
+        onDraggableDoubleClick={onDraggableDoubleClick}
       />
       <Inventory
         containerId={2}
         storages={containers[2]}
         canDrop={canDrop}
         drop={drop}
+        onDraggableDoubleClick={onDraggableDoubleClick}
       />
     </Wrapper>
   )

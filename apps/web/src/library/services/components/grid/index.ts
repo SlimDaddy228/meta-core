@@ -1,4 +1,5 @@
 import {type MouseEvent as ReactMouseEvent} from 'react'
+import type {GridItem} from '@components/grid/lib/types'
 
 export type GridCallbackOptions = {
   draggableId: number
@@ -12,6 +13,10 @@ export type GridCallbackOptions = {
 
 export type GridCanDropCallback = (options: GridCallbackOptions) => boolean
 export type GridDropCallback = (options: GridCallbackOptions) => void
+export type GridOnDraggableDoubleClick = (
+  event: ReactMouseEvent,
+  item: GridItem,
+) => void
 
 type Options = {
   event: ReactMouseEvent

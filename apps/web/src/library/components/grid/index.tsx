@@ -4,9 +4,10 @@ import {
   type GridCanDropCallback,
   GridComponentsService,
   type GridDropCallback,
+  type GridOnDraggableDoubleClick,
 } from '@library/services/components/grid'
 import {observer} from 'mobx-react-lite'
-import type {GridContainerId, GridStorage} from './lib/types'
+import type {GridContainerId, GridItem, GridStorage} from './lib/types'
 
 const Container = styled.div`
   width: fit-content;
@@ -64,23 +65,31 @@ const Draggable = styled.div<{
   left: 0;
 `
 
-const LEFT_MOUSE_BUTTON_CODE = 0
-
 interface Props {
   className?: string
   containerId: GridContainerId
   canDrop: GridCanDropCallback
   drop: GridDropCallback
+  onDraggableDoubleClick: GridOnDraggableDoubleClick
   storages: GridStorage[]
 }
 
 export const Grid: FC<Props> = observer(
-  ({className, containerId, storages, drop, canDrop}) => {
-    const onDragStart = (event: MouseEvent) => {
-      if (event.button === LEFT_MOUSE_BUTTON_CODE) {
-        const service = new GridComponentsService({event, drop, canDrop})
-        service.start()
-      }
+  ({
+    className,
+    containerId,
+    storages,
+    drop,
+    onDraggableDoubleClick,
+    canDrop,
+  }) => {
+    const onMouseMove = (event: MouseEvent) => {
+      const service = new GridComponentsService({event, drop, canDrop})
+      service.start()
+    }
+
+    const onDoubleClick = (event: MouseEvent, item: GridItem) => {
+      onDraggableDoubleClick(event, item)
     }
 
     return (
@@ -123,7 +132,9 @@ export const Grid: FC<Props> = observer(
                           height={item.height}
                           image="https://via.placeholder.com/200x200"
                           gap={storage.gap}
-                          onMouseDown={onDragStart}
+                          draggable
+                          onDoubleClick={(event) => onDoubleClick(event, item)}
+                          onDragStart={onMouseMove}
                         />
                       )}
                     </Droppable>

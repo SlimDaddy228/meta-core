@@ -1,6 +1,9 @@
 import {makeAutoObservable} from 'mobx'
 import type {GridContainers} from '@components/grid/lib/types'
-import type {GridCallbackOptions} from '@library/services/components/grid'
+import type {
+  GridCallbackOptions,
+  GridOnDraggableDoubleClick,
+} from '@library/services/components/grid'
 
 export class CContainers {
   private _containers: GridContainers = {}
@@ -19,6 +22,16 @@ export class CContainers {
 
   public canDrop(options: GridCallbackOptions): boolean {
     return this.isInBoundaries(options) && !this.isOverlapping(options)
+  }
+
+  public openItemContainer(...options: Parameters<GridOnDraggableDoubleClick>) {
+    const [event, item] = options
+
+    if (item.storage_nodes.length === 0) {
+      return
+    }
+
+    console.log('open item container')
   }
 
   public drop(options: GridCallbackOptions): void {

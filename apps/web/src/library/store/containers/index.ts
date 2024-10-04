@@ -47,7 +47,7 @@ export class CContainers {
   }
 
   public openItemContainer(...options: Parameters<GridOnDraggableDoubleClick>) {
-    const [event, item] = options
+    const {1: item} = options
 
     if (item.storage_nodes.length === 0) {
       return

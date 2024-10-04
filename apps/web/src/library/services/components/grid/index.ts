@@ -9,6 +9,7 @@ export type GridCallbackOptions = {
   toContainerId: number
   toX: number
   toY: number
+  isRotate: boolean
 }
 
 export type GridCanDropCallback = (options: GridCallbackOptions) => boolean
@@ -44,6 +45,16 @@ export class GridComponentsService {
     this.draggableClone = this.createDraggableClone()
   }
 
+  private _isRotate = false
+
+  public get isRotate(): boolean {
+    return this._isRotate
+  }
+
+  private set isRotate(value: boolean) {
+    this._isRotate = value
+  }
+
   public start() {
     const mouseMoveHandler = (event: MouseEvent) => {
       this.mouseMove(event)
@@ -51,7 +62,7 @@ export class GridComponentsService {
 
     const mouseKeyUpHandler = (event: KeyboardEvent) => {
       if (event.code.toLowerCase() === 'keyr') {
-        this.rotate()
+        this.toggleRotate()
       }
     }
 
@@ -67,7 +78,15 @@ export class GridComponentsService {
     document.addEventListener('keyup', mouseKeyUpHandler)
   }
 
-  private rotate(): void {}
+  private toggleRotate(): void {
+    this._isRotate = !this._isRotate
+
+    const width = `${this.draggableTarget.offsetWidth}px`
+    const height = `${this.draggableTarget.offsetHeight}px`
+
+    this.draggableClone.style.width = this.isRotate ? height : width
+    this.draggableClone.style.height = this.isRotate ? width : height
+  }
 
   private createDraggableClone(): HTMLElement {
     const clone = this.draggableTarget.cloneNode(true) as HTMLElement
@@ -178,6 +197,7 @@ export class GridComponentsService {
     }
 
     return {
+      isRotate: this.isRotate,
       draggableId,
       fromContainerId,
       fromStorageId,

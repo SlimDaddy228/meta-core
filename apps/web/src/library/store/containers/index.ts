@@ -81,17 +81,33 @@ export class CContainers {
 
     const draggableItem = from.storage.items[itemIndex]
 
-    if (
+    const newWidth = options.isRotate
+      ? draggableItem.height
+      : draggableItem.width
+    const newHeight = options.isRotate
+      ? draggableItem.width
+      : draggableItem.height
+
+    const isEqualPosition =
       draggableItem.position.x === options.toX &&
-      draggableItem.position.y === options.toY &&
-      from.storage.id === to.storage.id
-    ) {
+      draggableItem.position.y === options.toY
+    const isEqualStorage = from.storage.id === to.storage.id
+    const isEqualSize =
+      draggableItem.width === newWidth || draggableItem.height === newHeight
+
+    if (isEqualPosition && isEqualStorage && isEqualSize) {
       return
     }
 
-    const clonePreviousItem = {...draggableItem}
-    clonePreviousItem.position.x = options.toX
-    clonePreviousItem.position.y = options.toY
+    const clonePreviousItem = {
+      ...draggableItem,
+      position: {
+        x: options.toX,
+        y: options.toY,
+      },
+      width: newWidth,
+      height: newHeight,
+    }
     to.storage.items.push(clonePreviousItem)
     from.storage.items.splice(itemIndex, 1)
   }
@@ -151,8 +167,11 @@ export class CContainers {
       return false
     }
 
-    const maxX = to.storage.columns - draggableItem.width
-    const maxY = to.storage.rows - draggableItem.height
+    const width = options.isRotate ? draggableItem.height : draggableItem.width
+    const maxX = to.storage.columns - width
+
+    const height = options.isRotate ? draggableItem.width : draggableItem.height
+    const maxY = to.storage.rows - height
 
     return !(
       options.toX < 0 ||
@@ -185,8 +204,16 @@ export class CContainers {
 
       const itemEndX = item.position.x + item.width
       const itemEndY = item.position.y + item.height
-      const movingEndX = options.toX + draggableItem.width
-      const movingEndY = options.toY + draggableItem.height
+
+      const draggableWidth = options.isRotate
+        ? draggableItem.height
+        : draggableItem.width
+      const draggableHeight = options.isRotate
+        ? draggableItem.width
+        : draggableItem.height
+
+      const movingEndX = options.toX + draggableWidth
+      const movingEndY = options.toY + draggableHeight
 
       return (
         options.toX < itemEndX &&

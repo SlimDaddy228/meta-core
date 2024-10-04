@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
-import type {GridContainers} from '@components/grid/lib/types'
+import type {GridContainers, GridStorage} from '@components/grid/lib/types'
 import {store} from '@library/store'
 import {Grid} from '@components/grid'
 import type {
@@ -34,6 +34,34 @@ const Inventory = styled(Grid)`
   max-height: 90vh;
   overflow: auto;
 `
+
+const InventoryCenter = styled(Grid)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-height: 90vh;
+  overflow: auto;
+`
+
+export const TEST_NODE_222: GridStorage = {
+  id: 222,
+  size: 50,
+  columns: 5,
+  rows: 1,
+  gap: 2,
+  items: [
+    {
+      id: 200,
+      width: 1,
+      height: 1,
+      position: {
+        x: 0,
+        y: 0,
+      },
+      storage_nodes: [],
+    },
+  ],
+}
 
 const mainInventory: GridContainers = {
   1: [
@@ -106,7 +134,7 @@ const bag: GridContainers = {
             {
               id: 1,
               itemId: 100,
-              storageId: 1,
+              storageId: TEST_NODE_222.id,
             },
           ],
         },
@@ -116,10 +144,11 @@ const bag: GridContainers = {
 }
 
 export const Containers = observer(() => {
-  const containers = store.containers.getContainers()
+  const containers = store.containers.get()
+  const openedContainers = store.containers.opened
 
   useEffect(() => {
-    store.containers.setContainers({...mainInventory, ...bag})
+    store.containers.set({...mainInventory, ...bag})
   }, [])
 
   const canDrop: GridCanDropCallback = (options: GridCallbackOptions) => {
@@ -154,6 +183,33 @@ export const Containers = observer(() => {
         drop={drop}
         onDraggableDoubleClick={onDraggableDoubleClick}
       />
+      {Object.entries(containers).map(([containerId, storages]) => {
+        const normalizeStorageId = Number(containerId)
+
+        if (!openedContainers.has(normalizeStorageId)) {
+          return null
+        }
+
+        const close = () => {
+          store.containers.closeItemContainer(normalizeStorageId)
+        }
+
+        return (
+          <div>
+            <button onClick={close} type="button">
+              close
+            </button>
+            <InventoryCenter
+              key={normalizeStorageId}
+              containerId={normalizeStorageId}
+              storages={storages}
+              canDrop={canDrop}
+              drop={drop}
+              onDraggableDoubleClick={onDraggableDoubleClick}
+            />
+          </div>
+        )
+      })}
     </Wrapper>
   )
 })

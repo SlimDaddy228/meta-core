@@ -1,23 +1,45 @@
 import {makeAutoObservable} from 'mobx'
-import type {GridContainers} from '@components/grid/lib/types'
+import type {
+  GridContainerId,
+  GridContainers,
+  GridStorage,
+} from '@components/grid/lib/types'
 import type {
   GridCallbackOptions,
   GridOnDraggableDoubleClick,
 } from '@library/services/components/grid'
+import {TEST_NODE_222} from '@library/slices/containers'
+import {store} from '@library/store'
 
 export class CContainers {
+  public readonly opened = new Set<GridContainerId>()
+
   private _containers: GridContainers = {}
 
   constructor() {
     makeAutoObservable(this)
   }
 
-  public getContainers(): GridContainers {
+  public get(): GridContainers {
     return this._containers
   }
 
-  public setContainers(containers: GridContainers) {
+  public set(containers: GridContainers) {
     this._containers = containers
+  }
+
+  public add(id: GridContainerId, storages: GridStorage[]): void {
+    this._containers[id] = storages
+  }
+
+  public has(id: GridContainerId): boolean {
+    return Boolean(this._containers[id])
+  }
+
+  public delete(id: GridContainerId): void {
+    if (this.has(id)) {
+      delete this._containers[id]
+    }
   }
 
   public canDrop(options: GridCallbackOptions): boolean {
@@ -31,7 +53,14 @@ export class CContainers {
       return
     }
 
+    this.opened.add(item.id)
+    this.add(item.id, [TEST_NODE_222])
     console.log('open item container')
+  }
+
+  public closeItemContainer(id: GridContainerId): void {
+    this.opened.delete(id)
+    store.containers.delete(id)
   }
 
   public drop(options: GridCallbackOptions): void {

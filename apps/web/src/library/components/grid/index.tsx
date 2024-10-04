@@ -103,6 +103,8 @@ export const Grid: FC<Props> = observer(
           <Fragment key={storage.id}>
             <br />
             <span>{`StorageId: ${storage.id}`}</span>
+            <br />
+            <span>{`Items Amount: ${storage.items.length}`}</span>
             <Storage
               data-storage-id={storage.id}
               size={storage.size}
